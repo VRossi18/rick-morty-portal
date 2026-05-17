@@ -12,6 +12,12 @@
    "meta": {
       "appTitle": "Rick & Morty Portal"
    },
+   "notFound": {
+      "title": "404 — Rick & Morty Portal",
+      "sectionAria": "Página não encontrada",
+      "message": "A página que você está procurando foi movida para outro universo.",
+      "home": "ME LEVA PARA CASA"
+   },
    "home": {
       "hero": {
          "title": "RICK AND",
