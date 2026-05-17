@@ -11,7 +11,6 @@ import type { AbilityId, AbilityScores, RaceDefinition, RaceId } from './types';
 
 export type CharacterSheetExportTranslate = (key: string) => string;
 
-/** Current JSON document schema for character sheet exports. */
 export const CHARACTER_SHEET_EXPORT_SCHEMA_VERSION = 3 as const;
 
 export interface CharacterSheetExportInput {
@@ -178,7 +177,10 @@ function d20Modifier(total: number): number {
    return Math.floor((total - 10) / 2);
 }
 
-function raceSkillsFromLocale(t: CharacterSheetExportTranslate, raceId: RaceId): CharacterSheetExportRaceSkills {
+function raceSkillsFromLocale(
+   t: CharacterSheetExportTranslate,
+   raceId: RaceId,
+): CharacterSheetExportRaceSkills {
    const p = `rpg.races.${raceId}.skills`;
    return {
       attacks: [

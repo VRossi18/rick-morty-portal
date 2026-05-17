@@ -27,17 +27,14 @@ export function dexSpeedTier(dexTotal: number): DexSpeedTier {
    return n as DexSpeedTier;
 }
 
-/** STR total as physical-attack channel rating (same scale as ability totals). */
 export function physicalAttackRating(totals: AbilityScores): number {
    return totals.str;
 }
 
-/** INT total as magical-attack channel rating. */
 export function magicalAttackRating(totals: AbilityScores): number {
    return totals.int;
 }
 
-/** CHA total as out-of-combat social / influence pool. */
 export function socialInfluencePool(totals: AbilityScores): number {
    return totals.cha;
 }
@@ -46,7 +43,6 @@ export function hitPointsMax(totals: AbilityScores): number {
    return DERIVED_HP_BASE + totals.con;
 }
 
-/** Races with an innate edge at moving unseen (flat bonus to stealth rating). */
 export const STEALTH_RACIAL_BONUS = 2;
 
 export function stealthRacialBonus(raceId: RaceId): number {
@@ -56,7 +52,6 @@ export function stealthRacialBonus(raceId: RaceId): number {
    return 0;
 }
 
-/** Stealth / unseen movement: DEX total plus any racial knack (Bird-Person, Parasites). */
 export function stealthRating(totals: AbilityScores, raceId: RaceId): number {
    return totals.dex + stealthRacialBonus(raceId);
 }
