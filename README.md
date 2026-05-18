@@ -1,6 +1,14 @@
-# Rick and Morty Portal
+<p align="center">
+  <img src="public/favicon.png" alt="Rick and Morty Portal" width="128" height="128" />
+</p>
 
-[![Pipeline](https://github.com/VRossi18/rick-morty-portal/actions/workflows/pipeline.yml/badge.svg)](https://github.com/VRossi18/rick-morty-portal/actions/workflows/pipeline.yml)
+<h1 align="center">Rick and Morty Portal</h1>
+
+<p align="center">
+  <a href="https://github.com/VRossi18/rick-morty-portal/actions/workflows/pipeline.yml">
+    <img src="https://github.com/VRossi18/rick-morty-portal/actions/workflows/pipeline.yml/badge.svg" alt="Pipeline status" />
+  </a>
+</p>
 
 A small **React** app that browses characters from the [Rick and Morty API](https://rickandmortyapi.com/), with a **character detail** view, client-side routing, and a portal-style transition between the grid and the detail screen. This repository doubles as a **hands-on sandbox for learning GitHub Actions**: workflows, jobs, GitHub Pages deploy, and keeping `main` green with automated checks. It is also a place to **go deeper with the stack** (React, TypeScript, Vite, routing, i18n, testing) and to **experiment with LLM-backed gameplay**—for example a GM or rules assistant grounded in the rules you encode in the app.
 
@@ -21,7 +29,7 @@ Beyond CI/CD, the project is meant to grow a **playable Rick and Morty–inspire
 | **Deploy GitHub Pages** | After build, only on **`push` to `main`** | `actions/deploy-pages` publishes the uploaded artifact |
 | **Tag release (patch)** | After a successful Pages deploy on **`push` to `main`** | Reads [`.github/version-prefix`](.github/version-prefix) (`MAJOR.MINOR`, e.g. `1.0`), finds the latest `v{MAJOR}.{MINOR}.{patch}` tag, increments **patch**, and pushes the new tag (first in a series is `v1.0.1`). Edit the prefix file manually for a new **major/minor** line (e.g. `2.0` → `v2.0.1`, …). |
 
-The production build runs [`scripts/copy-404.mjs`](scripts/copy-404.mjs) after Vite so **`dist/404.html`** mirrors `index.html`. That helps the hosted SPA when users refresh or open a deep link such as `/rick-morty-portal/character/2` on GitHub Pages.
+The production build runs [`scripts/copy-404.mjs`](scripts/copy-404.mjs) after Vite so **`dist/404.html`** mirrors `index.html`. That helps the hosted SPA when users refresh or open a deep link such as `/rick-morty-portal/character/2` on GitHub Pages. Unknown in-app routes are handled by a dedicated **404 page** (React Router catch-all `path="*"`), so client navigation to a missing path shows the themed UI instead of a blank outlet.
 
 ```mermaid
 flowchart LR
@@ -87,6 +95,7 @@ Workflow file: [`.github/workflows/pipeline.yml`](.github/workflows/pipeline.yml
 - Light / dark theme toggle
 - Responsive layout
 - **Rick and Morty RPG** — point-buy **character creator** at **`/rpg`**: races with modifiers and drawbacks, 27-point pool, scores 8–15 before racial, live totals, per-race **skills** (attacks / support / item), **derived stats** (HP, attack channels, social pool, DEX cadence, **stealth** with +2 racial ease for Bird-Person and Parasites), **cheat-sheet** on the page, **Export JSON** (confirm dialog), and **Create character** (second confirm, then a **summary modal** with the full sheet, export from there, and a non-functional **Start game** button for upcoming flow). See [`CharacterSheetContainer`](src/components/rpg/CharacterSheetContainer.tsx), [`useCharacterCreation`](src/components/rpg/useCharacterCreation.ts), [`rpgDerivedSheet`](src/components/rpg/rpgDerivedSheet.ts), and [`buildCharacterSheetExport`](src/components/rpg/buildCharacterSheetExport.ts).
+- **Custom 404 page** — any unknown route (e.g. `/dimensao-perdida`) renders [`NotFoundPage`](src/pages/NotFoundPage.tsx) inside the main shell (navbar + theme toggle stay visible). Visual design is inspired by [this CodePen](https://codepen.io/hkmtqffr/pen/dVPewm): spinning starfield, large **“44”** with a Rick and Morty portal image in the middle, localized message (PT / EN), and a **“GET ME HOME”** / **“ME LEVA PARA CASA”** link back to **`/characters`**. Styles live in [`src/styles/not-found.css`](src/styles/not-found.css); the portal asset is served from [`public/404/portal.png`](public/404/portal.png) via `import.meta.env.BASE_URL`. Animations respect `prefers-reduced-motion`.
 - **`import.meta.env.BASE_URL`** as the router `basename` in production so asset paths and routes stay correct under a GitHub Pages project URL (see [`vite.config.ts`](vite.config.ts))
 
 ---
@@ -109,6 +118,8 @@ pnpm dev
 ```
 
 Open the URL Vite prints (usually `http://localhost:5173`). In dev, the app lives at the root path; in production the Vite `base` is set for the GitHub Pages subpath, and the router uses the same value.
+
+To try the 404 page locally, open any path that is not registered (for example `http://localhost:5173/rota-inexistente`).
 
 ### Scripts
 
