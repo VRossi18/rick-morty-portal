@@ -17,6 +17,9 @@
       "rpg:write-export-sample": "tsx scripts/write-rpg-character-export-sample.ts"
    },
    "pnpm": {
+      "overrides": {
+         "ws": ">=8.20.1"
+      },
       "onlyBuiltDependencies": [
          "esbuild"
       ]
