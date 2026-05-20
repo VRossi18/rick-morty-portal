@@ -43,13 +43,11 @@
       "statusAll": "Status (all)",
       "genderLabel": "Gender",
       "genderAll": "Gender (all)",
-      "advancedShow": "Advanced filters",
-      "advancedHide": "Hide advanced filters",
       "clear": "Clear filters",
       "species": "Species",
+      "speciesAll": "Species (all)",
       "type": "Type",
-      "speciesPlaceholder": "e.g. Human",
-      "typePlaceholder": "e.g. empty or Parasite"
+      "typeAll": "Type (all)"
    },
    "characterDetail": {
       "back": "Back to portal",

@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { SPECIES_FILTER_OPTIONS, TYPE_FILTER_OPTIONS } from '../data/characterFilterOptions';
 
 interface CharacterFiltersBarProps {
    nameDraft: string;
@@ -11,11 +12,12 @@ interface CharacterFiltersBarProps {
    onSpeciesChange: (value: string) => void;
    type: string;
    onTypeChange: (value: string) => void;
-   advancedOpen: boolean;
-   onAdvancedOpenChange: (open: boolean) => void;
    onClearFilters: () => void;
    hasActiveFilters: boolean;
 }
+
+const selectClassName =
+   'min-w-[8.5rem] flex-1 rounded-lg border border-primary/40 bg-[var(--bg-color)] px-3 py-2 text-sm font-semibold text-[var(--text-color)] outline-none ring-primary/30 focus:border-primary focus:ring-2 sm:flex-none';
 
 export function CharacterFiltersBar({
    nameDraft,
@@ -28,15 +30,13 @@ export function CharacterFiltersBar({
    onSpeciesChange,
    type,
    onTypeChange,
-   advancedOpen,
-   onAdvancedOpenChange,
    onClearFilters,
    hasActiveFilters,
 }: CharacterFiltersBarProps) {
    const { t } = useTranslation('common');
 
    return (
-      <div className="mx-auto mb-10 max-w-3xl space-y-4">
+      <div className="mx-auto mb-10 max-w-5xl space-y-4">
          <div className="space-y-2">
             <label htmlFor="character-search" className="sr-only">
                {t('filters.searchLabel')}
@@ -60,7 +60,7 @@ export function CharacterFiltersBar({
                id="filter-status"
                value={status}
                onChange={(e) => onStatusChange(e.target.value)}
-               className="min-w-[8.5rem] flex-1 rounded-lg border border-primary/40 bg-[var(--bg-color)] px-3 py-2 text-sm font-semibold text-[var(--text-color)] outline-none ring-primary/30 focus:border-primary focus:ring-2 sm:flex-none"
+               className={selectClassName}
             >
                <option value="">{t('filters.statusAll')}</option>
                <option value="alive">Alive</option>
@@ -75,7 +75,7 @@ export function CharacterFiltersBar({
                id="filter-gender"
                value={gender}
                onChange={(e) => onGenderChange(e.target.value)}
-               className="min-w-[9.5rem] flex-1 rounded-lg border border-primary/40 bg-[var(--bg-color)] px-3 py-2 text-sm font-semibold text-[var(--text-color)] outline-none ring-primary/30 focus:border-primary focus:ring-2 sm:flex-none"
+               className={`${selectClassName} min-w-[9.5rem]`}
             >
                <option value="">{t('filters.genderAll')}</option>
                <option value="female">Female</option>
@@ -84,13 +84,39 @@ export function CharacterFiltersBar({
                <option value="unknown">Unknown</option>
             </select>
 
-            <button
-               type="button"
-               onClick={() => onAdvancedOpenChange(!advancedOpen)}
-               className="rounded-lg border border-primary/40 px-3 py-2 text-sm font-semibold text-primary transition hover:border-primary hover:bg-primary/10"
+            <label className="sr-only" htmlFor="filter-species">
+               {t('filters.species')}
+            </label>
+            <select
+               id="filter-species"
+               value={species}
+               onChange={(e) => onSpeciesChange(e.target.value)}
+               className={`${selectClassName} min-w-[10rem]`}
             >
-               {advancedOpen ? t('filters.advancedHide') : t('filters.advancedShow')}
-            </button>
+               <option value="">{t('filters.speciesAll')}</option>
+               {SPECIES_FILTER_OPTIONS.map((option) => (
+                  <option key={option} value={option}>
+                     {option}
+                  </option>
+               ))}
+            </select>
+
+            <label className="sr-only" htmlFor="filter-type">
+               {t('filters.type')}
+            </label>
+            <select
+               id="filter-type"
+               value={type}
+               onChange={(e) => onTypeChange(e.target.value)}
+               className={`${selectClassName} min-w-[10rem] max-w-[14rem]`}
+            >
+               <option value="">{t('filters.typeAll')}</option>
+               {TYPE_FILTER_OPTIONS.map((option) => (
+                  <option key={option} value={option}>
+                     {option}
+                  </option>
+               ))}
+            </select>
 
             <button
                type="button"
@@ -101,43 +127,6 @@ export function CharacterFiltersBar({
                {t('filters.clear')}
             </button>
          </div>
-
-         {advancedOpen ? (
-            <div className="grid gap-3 rounded-xl border border-border/80 bg-card/40 p-4 sm:grid-cols-2">
-               <div className="space-y-1">
-                  <label
-                     htmlFor="filter-species"
-                     className="text-xs font-bold uppercase tracking-wide text-muted-foreground"
-                  >
-                     {t('filters.species')}
-                  </label>
-                  <input
-                     id="filter-species"
-                     type="text"
-                     value={species}
-                     onChange={(e) => onSpeciesChange(e.target.value)}
-                     placeholder={t('filters.speciesPlaceholder')}
-                     className="w-full rounded-lg border border-primary/40 bg-[var(--bg-color)] px-3 py-2 text-sm text-[var(--text-color)] outline-none focus:border-primary focus:ring-2 focus:ring-primary/30"
-                  />
-               </div>
-               <div className="space-y-1">
-                  <label
-                     htmlFor="filter-type"
-                     className="text-xs font-bold uppercase tracking-wide text-muted-foreground"
-                  >
-                     {t('filters.type')}
-                  </label>
-                  <input
-                     id="filter-type"
-                     type="text"
-                     value={type}
-                     onChange={(e) => onTypeChange(e.target.value)}
-                     placeholder={t('filters.typePlaceholder')}
-                     className="w-full rounded-lg border border-primary/40 bg-[var(--bg-color)] px-3 py-2 text-sm text-[var(--text-color)] outline-none focus:border-primary focus:ring-2 focus:ring-primary/30"
-                  />
-               </div>
-            </div>
-         ) : null}
       </div>
    );
 }

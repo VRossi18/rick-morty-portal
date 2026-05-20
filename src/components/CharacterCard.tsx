@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useRef } from 'react';
+import { memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import type { Character } from '../types/api';
@@ -13,7 +13,7 @@ interface Props {
    onBeforeNavigate?: (id: number) => void;
 }
 
-export function CharacterCard({ character, interaction = 'normal', onBeforeNavigate }: Props) {
+function CharacterCardInner({ character, interaction = 'normal', onBeforeNavigate }: Props) {
    const ref = useRef<HTMLDivElement>(null);
    const navigate = useNavigate();
    const { t } = useTranslation('common');
@@ -69,7 +69,7 @@ export function CharacterCard({ character, interaction = 'normal', onBeforeNavig
          onMouseMove={handleMove}
          onClick={openDetail}
          onKeyDown={handleKeyDown}
-         className="glow-card group cursor-pointer outline-none ring-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-color)]"
+         className="character-card-item glow-card group cursor-pointer outline-none ring-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-color)]"
       >
          <div className="aspect-square overflow-hidden">
             <img
@@ -104,3 +104,5 @@ export function CharacterCard({ character, interaction = 'normal', onBeforeNavig
       </motion.div>
    );
 }
+
+export const CharacterCard = memo(CharacterCardInner);

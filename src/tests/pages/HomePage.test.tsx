@@ -60,13 +60,35 @@ describe('HomePage', () => {
       expect(await screen.findByRole('heading', { name: /Rick Sanchez/i })).toBeInTheDocument();
    });
 
-   it('renders search field and status filter', () => {
+   it('renders search field and filter selects including species and type', () => {
       renderHome();
       expect(screen.getByPlaceholderText(i18n.t('filters.searchPlaceholder'))).toBeInTheDocument();
       const statusSelect = screen.getByLabelText(i18n.t('filters.statusLabel'));
       expect(
          within(statusSelect).getByRole('option', { name: i18n.t('filters.statusAll') }),
       ).toBeInTheDocument();
+      const speciesSelect = screen.getByLabelText(i18n.t('filters.species'));
+      expect(
+         within(speciesSelect).getByRole('option', { name: i18n.t('filters.speciesAll') }),
+      ).toBeInTheDocument();
+      expect(within(speciesSelect).getByRole('option', { name: 'Human' })).toBeInTheDocument();
+      const typeSelect = screen.getByLabelText(i18n.t('filters.type'));
+      expect(
+         within(typeSelect).getByRole('option', { name: i18n.t('filters.typeAll') }),
+      ).toBeInTheDocument();
+   });
+
+   it('requests list with species when species filter changes', async () => {
+      renderHome();
+      await waitFor(() => expect(mockedGetCharacters).toHaveBeenCalled());
+
+      mockedGetCharacters.mockClear();
+      const speciesSelect = screen.getByLabelText(i18n.t('filters.species'));
+      fireEvent.change(speciesSelect, { target: { value: 'Human' } });
+
+      await waitFor(() => {
+         expect(mockedGetCharacters).toHaveBeenCalledWith(1, { species: 'Human' });
+      });
    });
 
    it('requests list with status when status filter changes', async () => {

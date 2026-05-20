@@ -1,17 +1,18 @@
 import { isAxiosError } from 'axios';
 import { motion } from 'framer-motion';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { CharacterCard } from '../components/CharacterCard';
 import { CharacterFiltersBar } from '../components/CharacterFiltersBar';
+import { HomeHero } from '../components/HomeHero';
 import { CharacterService, type CharacterListFilters } from '../services/characters';
 import type { Character, Info } from '../types/api';
 
 const emptyInfo: Info = { count: 0, pages: 1, next: null, prev: null };
 
 export function HomePage() {
-   const { t, i18n } = useTranslation('common');
+   const { t } = useTranslation('common');
    const [characters, setCharacters] = useState<Character[]>([]);
    const [loading, setLoading] = useState(true);
    const [page, setPage] = useState(1);
@@ -27,7 +28,6 @@ export function HomePage() {
    const [gender, setGender] = useState('');
    const [species, setSpecies] = useState('');
    const [type, setType] = useState('');
-   const [advancedOpen, setAdvancedOpen] = useState(false);
 
    const hasActiveFilters = useMemo(
       () =>
@@ -39,7 +39,7 @@ export function HomePage() {
       [nameDraft, status, gender, species, type],
    );
 
-   const clearAllFilters = () => {
+   const clearAllFilters = useCallback(() => {
       lastCommittedName.current = '';
       setNameDraft('');
       setAppliedName('');
@@ -47,17 +47,38 @@ export function HomePage() {
       setGender('');
       setSpecies('');
       setType('');
-      setAdvancedOpen(false);
       setPage(1);
-   };
+   }, []);
+
+   const handleStatusChange = useCallback((v: string) => {
+      setStatus(v);
+      setPage(1);
+   }, []);
+
+   const handleGenderChange = useCallback((v: string) => {
+      setGender(v);
+      setPage(1);
+   }, []);
+
+   const handleSpeciesChange = useCallback((v: string) => {
+      setSpecies(v);
+      setPage(1);
+   }, []);
+
+   const handleTypeChange = useCallback((v: string) => {
+      setType(v);
+      setPage(1);
+   }, []);
 
    useEffect(() => {
       const id = window.setTimeout(() => {
          const next = nameDraft.trim();
          if (lastCommittedName.current !== next) {
             lastCommittedName.current = next;
-            setAppliedName(next);
-            setPage(1);
+            startTransition(() => {
+               setAppliedName(next);
+               setPage(1);
+            });
          }
       }, 380);
       return () => window.clearTimeout(id);
@@ -88,24 +109,32 @@ export function HomePage() {
                return;
             }
 
-            setCharacters(data.results);
-            setPageInfo(data.info);
+            startTransition(() => {
+               setCharacters(data.results);
+               setPageInfo(data.info);
+            });
          } catch (err) {
             if (!isMounted) {
                return;
             }
 
             if (isAxiosError(err) && err.response?.status === 404) {
-               setCharacters([]);
-               setPageInfo(emptyInfo);
-               setError(null);
+               startTransition(() => {
+                  setCharacters([]);
+                  setPageInfo(emptyInfo);
+                  setError(null);
+               });
             } else {
                console.error('Erro ao carregar personagens:', err);
-               setError(i18n.t('home.errorLoad'));
+               startTransition(() => {
+                  setError(t('home.errorLoad'));
+               });
             }
          } finally {
             if (isMounted) {
-               setLoading(false);
+               startTransition(() => {
+                  setLoading(false);
+               });
             }
          }
       };
@@ -115,25 +144,29 @@ export function HomePage() {
       return () => {
          isMounted = false;
       };
-   }, [page, listFilters]); // eslint-disable-line react-hooks/exhaustive-deps
+   }, [page, listFilters, t]);
 
-   const handleBeforeNavigate = (id: number) => {
+   const handleBeforeNavigate = useCallback((id: number) => {
       flushSync(() => {
          setTransitionFocusId(id);
       });
-   };
+   }, []);
 
-   const goToPreviousPage = () => {
+   const goToPreviousPage = useCallback(() => {
       if (pageInfo?.prev) {
-         setPage((currentPage) => currentPage - 1);
+         startTransition(() => {
+            setPage((currentPage) => currentPage - 1);
+         });
       }
-   };
+   }, [pageInfo?.prev]);
 
-   const goToNextPage = () => {
+   const goToNextPage = useCallback(() => {
       if (pageInfo?.next) {
-         setPage((currentPage) => currentPage + 1);
+         startTransition(() => {
+            setPage((currentPage) => currentPage + 1);
+         });
       }
-   };
+   }, [pageInfo?.next]);
 
    const showEmptyResults = !loading && !error && characters.length === 0;
 
@@ -145,43 +178,19 @@ export function HomePage() {
          exit={{ opacity: 0 }}
          transition={{ duration: 0.28, ease: 'easeOut' }}
       >
-         <header className="px-4 pb-6 pt-8 text-center md:pt-10">
-            <h1 className="text-5xl font-black tracking-tighter text-[var(--text-color)] md:text-6xl">
-               {t('home.hero.title')}{' '}
-               <span className="text-primary">{t('home.hero.titleAccent')}</span>
-            </h1>
-            <p className="mt-4 font-medium tracking-wide text-slate-500 dark:text-slate-400">
-               {t('home.hero.subtitle')}
-            </p>
-            <div className="mx-auto mt-6 h-1.5 w-24 rounded-full bg-primary opacity-20"></div>
-         </header>
-
+         <HomeHero />
          <main className="mx-auto max-w-[1400px] px-6 pb-20">
             <CharacterFiltersBar
                nameDraft={nameDraft}
                onNameDraftChange={setNameDraft}
                status={status}
-               onStatusChange={(v) => {
-                  setStatus(v);
-                  setPage(1);
-               }}
+               onStatusChange={handleStatusChange}
                gender={gender}
-               onGenderChange={(v) => {
-                  setGender(v);
-                  setPage(1);
-               }}
+               onGenderChange={handleGenderChange}
                species={species}
-               onSpeciesChange={(v) => {
-                  setSpecies(v);
-                  setPage(1);
-               }}
+               onSpeciesChange={handleSpeciesChange}
                type={type}
-               onTypeChange={(v) => {
-                  setType(v);
-                  setPage(1);
-               }}
-               advancedOpen={advancedOpen}
-               onAdvancedOpenChange={setAdvancedOpen}
+               onTypeChange={handleTypeChange}
                hasActiveFilters={hasActiveFilters}
                onClearFilters={clearAllFilters}
             />
@@ -202,7 +211,7 @@ export function HomePage() {
                   </div>
                ) : (
                   <div
-                     className={`grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 ${loading ? 'pointer-events-none opacity-45' : ''}`}
+                     className={`character-grid grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 ${loading ? 'pointer-events-none opacity-45' : ''}`}
                   >
                      {characters.map((char) => {
                         const interaction =
@@ -229,7 +238,7 @@ export function HomePage() {
                      aria-busy="true"
                      aria-live="polite"
                   >
-                     <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+                     <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent" />
                      <p className="animate-pulse text-sm font-bold text-primary">
                         {t('home.loading')}
                      </p>
