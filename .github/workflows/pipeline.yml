@@ -4,6 +4,7 @@ env:
    NODE_VERSION: '24.15.0'
    PACKAGE_MANAGER: 'pnpm'
    PACKAGE_MANAGER_VERSION: '10.15.0'
+   SERVICE_NAME: rick-morty-portal
 
 on:
    push:
@@ -60,11 +61,11 @@ jobs:
          - name: install node
            uses: actions/setup-node@v5
            with:
-              node-version: '24.15.0'
+              node-version: ${{ env.NODE_VERSION }}
          - name: install pnpm (package manager)
            uses: pnpm/action-setup@v5
            with:
-              version: 10.15.0
+              version: ${{ env.PACKAGE_MANAGER_VERSION }}
          - name: Build and audit
            run: |
               pnpm install
@@ -79,14 +80,50 @@ jobs:
    deploy:
       name: Deploy to Cloud Run and test
       needs: build-audit-package
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       runs-on: ubuntu-latest
       steps:
+         - name: checkout
+           uses: actions/checkout@v5
+
+         - name: install node
+           uses: actions/setup-node@v5
+           with:
+              node-version: ${{ env.NODE_VERSION }}
+
+         - name: install pnpm (package manager)
+           uses: pnpm/action-setup@v5
+           with:
+              version: ${{ env.PACKAGE_MANAGER_VERSION }}
+
+         - name: Build static app for Cloud Run (root base path)
+           run: |
+              pnpm install
+              NODE_ENV=production VITE_BASE=/ pnpm exec tsc -b
+              NODE_ENV=production VITE_BASE=/ pnpm exec vite build
+              node ./scripts/copy-404.mjs
+
+         - name: Set image names
+           run: |
+              REPO_LC=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+              echo "IMAGE_GHCR=ghcr.io/${REPO_LC}" >> "$GITHUB_ENV"
+              echo "IMAGE_GCP=${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_REGISTRY_NAME }}/${{ env.SERVICE_NAME }}" >> "$GITHUB_ENV"
+
          - name: Log in ghcr.io
            uses: docker/login-action@v3
            with:
               registry: ghcr.io
               username: ${{ github.actor }}
               password: ${{ secrets.GITHUB_TOKEN }}
+
+         - name: Build and push image to ghcr.io
+           uses: docker/build-push-action@v6
+           with:
+              context: .
+              push: true
+              tags: |
+                 ${{ env.IMAGE_GHCR }}:${{ github.sha }}
+                 ${{ env.IMAGE_GHCR }}:latest
 
          - name: Authenticate with Google Cloud
            id: auth
@@ -98,33 +135,33 @@ jobs:
          - name: Set up Google Cloud CLI
            uses: google-github-actions/setup-gcloud@v2
 
-         - name: Configure Docker
-           run: gcloud auth configure-docker ${{ secrets.GCP_REGION }}-docker.pkg.dev
+         - name: Configure Docker for Artifact Registry
+           run: gcloud auth configure-docker ${{ secrets.GCP_REGION }}-docker.pkg.dev --quiet
 
-         - name: Tag the image for GCP Container Registry
+         - name: Tag and push image to Artifact Registry
            run: |
               set -euo pipefail
-              docker tag ghcr.io/${{ github.repository }}:${{ github.sha }} \
-               ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_REGISTRY_NAME }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
+              docker tag "${IMAGE_GHCR}:${{ github.sha }}" "${IMAGE_GCP}:${{ github.sha }}"
+              docker push "${IMAGE_GCP}:${{ github.sha }}"
               docker image ls
-
-         - name: Push the tagged image to GCP Container Registry
-           run: docker push ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_REGISTRY_NAME }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
 
          - name: Deploy to Cloud Run service
            uses: google-github-actions/deploy-cloudrun@v2
            with:
               service: ${{ env.SERVICE_NAME }}
               region: ${{ secrets.GCP_REGION }}
-              image: ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{secrets.GCP_PROJECT_ID}}/${{ secrets.GCP_REGISTRY_NAME }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
-              flags: '--allow-unauthenticated'
+              image: ${{ env.IMAGE_GCP }}:${{ github.sha }}
+              flags: '--allow-unauthenticated --port=8080'
 
-         - name: Test the Live Application
+         - name: Test the live application
+           env:
+              SERVICE_NAME: ${{ env.SERVICE_NAME }}
            run: |
-              DEPLOY_URL=$(gcloud run services describe $SERVICE_NAME --platform=managed --region=${{ secrets.GCP_REGION }} --format='value(status.url)')
+              set -euo pipefail
+              DEPLOY_URL=$(gcloud run services describe "${SERVICE_NAME}" --platform=managed --region=${{ secrets.GCP_REGION }} --format='value(status.url)')
               echo "Testing DEPLOY_URL: ${DEPLOY_URL}"
-              curl --silent --fail ${DEPLOY_URL}/health
-              curl --silent --fail ${DEPLOY_URL}/05024756-765e-41a9-89d7-1407436d9a58
+              curl --silent --fail "${DEPLOY_URL}/health"
+              curl --silent --fail "${DEPLOY_URL}/"
 
    deploy-pages:
       name: Deploy GitHub Pages
@@ -142,7 +179,7 @@ jobs:
    tag-deploy:
       name: Tag release (patch)
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      needs: deploy-pages
+      needs: [deploy-pages, deploy]
       runs-on: ubuntu-latest
       permissions:
          contents: write
