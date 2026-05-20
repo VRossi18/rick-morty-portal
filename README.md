@@ -129,6 +129,10 @@ Front-end choices follow **[Vercel React Best Practices](https://skills.sh/verce
 
 1. **LLM-playable tabletop RPG** — evolve **`/rpg`** into a session you can run with an LLM (session UI, richer prompts, optional small backend or MCP) while keeping the static app and GitHub Pages story in mind; JSON export is already the first integration surface for external tools
 
+2. **Detail page polish (characters & episodes)** — deepen **`/character/:id`** and **`/episode/:id`** beyond the current API fields: cross-links (e.g. from a character to episodes they appear in, from an episode back to filtered lists), optional portal-style transitions on episode detail similar to characters, and small UX tweaks (skeletons, retry, shared layout blocks) so both detail screens feel like one product surface
+
+3. **AI-generated curiosities on detail pages** — add a **“Curiosidade” / “Fun fact”** block on character and episode detail, powered by an LLM but **not** called from the browser with a secret key. Planned shape: a small **BFF** (e.g. extend the Cloud Run deploy with `/api/curiosities/character/:id` and `/api/curiosities/episode/:id`), prompts grounded only in Rick and Morty API data (name, status, species, air date, episode code, cast list), **PT/EN** tied to `i18n.language`, server-side **cache** by entity + locale, optional `localStorage` for repeat visits, loading/error/disclaimer states, a shared `AiCuriosityCard` component + hook, and Vitest mocks (no live LLM in CI). GitHub Pages stays static; production calls go to the hosted API. Alternative for a zero-runtime-cost path: pre-generate JSON in CI into `public/curiosities/` (trade-off: stale content, no per-user freshness)
+
 ---
 
 ## Getting started
