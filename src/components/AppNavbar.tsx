@@ -28,6 +28,9 @@ export function AppNavbar() {
                <NavLink to="/characters" className={tabClass}>
                   {t('nav.characters')}
                </NavLink>
+               <NavLink to="/episodes" className={tabClass}>
+                  {t('nav.episodes')}
+               </NavLink>
                <NavLink to="/rpg" className={tabClass}>
                   {t('nav.rpg')}
                </NavLink>

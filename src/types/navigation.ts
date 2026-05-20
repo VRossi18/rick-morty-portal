@@ -4,3 +4,10 @@ export type CharacterLocationState = {
       y: number;
    };
 };
+
+export type EpisodeLocationState = {
+   portal?: {
+      x: number;
+      y: number;
+   };
+};

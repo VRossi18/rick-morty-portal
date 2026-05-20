@@ -179,6 +179,10 @@
       content-visibility: auto;
       contain-intrinsic-size: auto 320px;
    }
+   .episode-card-item {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 200px;
+   }
    .glow-card {
       position: relative;
       border-radius: var(--radius-lg);

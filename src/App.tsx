@@ -11,6 +11,11 @@ const CharacterDetailPage = lazyPage(
    () => import('./pages/CharacterDetailPage'),
    'CharacterDetailPage',
 );
+const EpisodesPage = lazyPage(() => import('./pages/EpisodesPage'), 'EpisodesPage');
+const EpisodeDetailPage = lazyPage(
+   () => import('./pages/EpisodeDetailPage'),
+   'EpisodeDetailPage',
+);
 const NotFoundPage = lazyPage(() => import('./pages/NotFoundPage'), 'NotFoundPage');
 const RpgCharacterCreationPage = lazyPage(
    () => import('./pages/RpgCharacterCreationPage'),
@@ -30,6 +35,14 @@ export default function App() {
                   element={
                      <Suspense fallback={<RouteFallback />}>
                         <HomePage />
+                     </Suspense>
+                  }
+               />
+               <Route
+                  path="episodes"
+                  element={
+                     <Suspense fallback={<RouteFallback />}>
+                        <EpisodesPage />
                      </Suspense>
                   }
                />
@@ -54,6 +67,14 @@ export default function App() {
                   element={
                      <Suspense fallback={<RouteFallback />}>
                         <CharacterDetailPage />
+                     </Suspense>
+                  }
+               />
+               <Route
+                  path="episode/:id"
+                  element={
+                     <Suspense fallback={<RouteFallback />}>
+                        <EpisodeDetailPage />
                      </Suspense>
                   }
                />

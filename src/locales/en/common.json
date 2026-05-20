@@ -3,6 +3,7 @@
       "ariaMain": "Main",
       "about": "About me",
       "characters": "Rick & Morty Characters",
+      "episodes": "Episodes",
       "rpg": "Rick and Morty RPG"
    },
    "language": {
@@ -35,6 +36,53 @@
          "next": "Next",
          "pageOf": "Page {{current}} of {{total}}"
       }
+   },
+   "episodes": {
+      "hero": {
+         "title": "EPISODES",
+         "titleAccent": "RICK & MORTY",
+         "subtitle": "SEASONS AND ADVENTURES ACROSS THE MULTIVERSE"
+      },
+      "loading": "LOADING EPISODES...",
+      "errorLoad": "Could not load episodes for this page.",
+      "empty": {
+         "title": "No episodes found for these filters.",
+         "hint": "Adjust the name or selected characters and try again."
+      },
+      "pagination": {
+         "prev": "Previous",
+         "next": "Next",
+         "pageOf": "Page {{current}} of {{total}}"
+      },
+      "filters": {
+         "searchLabel": "Search episode by name",
+         "searchPlaceholder": "Search by name (e.g. Pilot, Ricklantis)...",
+         "charactersLabel": "Characters in episode",
+         "charactersPlaceholder": "Select characters...",
+         "charactersSelected": "{{count}} character(s) selected",
+         "characterSearchPlaceholder": "Search character to filter...",
+         "characterSearchLoading": "Searching characters...",
+         "characterSearchEmpty": "No characters found.",
+         "removeCharacter": "Remove {{name}} from filter",
+         "clear": "Clear filters"
+      },
+      "card": {
+         "ariaViewDetails": "View episode details for {{name}}",
+         "airDate": "Aired:",
+         "characterCount_one": "{{count}} character",
+         "characterCount_other": "{{count}} characters"
+      }
+   },
+   "episodeDetail": {
+      "back": "Back to episodes",
+      "loading": "OPENING DIMENSION...",
+      "errorInvalidId": "Invalid ID.",
+      "errorNotFound": "Episode not found.",
+      "errorLoadFailed": "Could not load this episode.",
+      "fieldAirDate": "Air date",
+      "fieldCreated": "Created",
+      "charactersHeading": "Characters in this episode",
+      "charactersEmpty": "No characters listed for this episode."
    },
    "filters": {
       "searchLabel": "Search character by name",

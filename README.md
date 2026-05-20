@@ -93,7 +93,7 @@ Workflow file: [`.github/workflows/pipeline.yml`](.github/workflows/pipeline.yml
 - **UI:** React 19, TypeScript, Vite 8
 - **Routing / motion:** React Router 7, Framer Motion (shared `layoutId` on the character image, `AnimatePresence` between routes)
 - **Styling:** Tailwind CSS 4, FlyonUI, `clsx` / `tailwind-merge`
-- **Data:** Axios (`GET /character` for lists, `GET /character/:id` for details — see [`CharacterService`](src/services/characters.ts))
+- **Data:** Axios (`GET /character` and `GET /episode` for lists, detail routes for each — see [`CharacterService`](src/services/characters.ts) and [`EpisodeService`](src/services/episodes.ts))
 - **i18n:** `i18next` + `react-i18next`, copy in [`src/locales/pt/common.json`](src/locales/pt/common.json) / [`src/locales/en/common.json`](src/locales/en/common.json), bootstrap in [`src/i18n.ts`](src/i18n.ts)
 - **Quality:** ESLint (flat config), Vitest, Testing Library, jsdom; **tsx** (dev) to run [`scripts/write-rpg-character-export-sample.ts`](scripts/write-rpg-character-export-sample.ts) for the CI JSON fixture
 - **Learning / experiments:** More real-world practice with the stack above; upcoming **LLM integration** (hosted APIs, structured prompts, or MCP) to support a **playable** tabletop-style loop alongside the UI
@@ -112,6 +112,7 @@ Front-end choices follow **[Vercel React Best Practices](https://skills.sh/verce
 - **Filters** — search by name (debounced), status, gender, species, and type (selects backed by the API catalog); wired to [`CharacterService.getCharacters`](src/services/characters.ts)
 - **Click a card** (`cursor: pointer`) to open **`/character/:id`**, with a short “portal” feel: other cards dim / ease aside, the image **animates into** the detail layout, and an optional radial overlay uses the click origin when navigation passes `location.state`
 - **Character detail** page: full fields from the API (status, species, type, gender, origin, location, episode count, created), loading and error handling (including 404)
+- **Episodes** at **`/episodes`** — paginated list from `GET /episode`, **masonry column layout** (same palette, glow cards, Framer Motion transitions as the character grid), search by episode name, and a **multi-select character filter** (OR logic, client-side: the API does not filter episodes by character, so all pages are fetched when that filter is active). **`/episode/:id`** shows air date, code, created timestamp, and linked characters with thumbnails.
 - **Back** link to the home grid
 - Loading and error states on the list
 - **About me** page at **`/about`** (author bio, portrait, contact / social links)

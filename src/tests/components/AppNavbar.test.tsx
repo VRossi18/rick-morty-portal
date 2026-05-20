@@ -3,6 +3,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 import { AppShell } from '../../components/AppShell';
 import { AboutPage } from '../../pages/AboutPage';
+import { EpisodesPage } from '../../pages/EpisodesPage';
 import { HomePage } from '../../pages/HomePage';
 import { RpgCharacterCreationPage } from '../../pages/RpgCharacterCreationPage';
 
@@ -12,6 +13,7 @@ function renderShell(initialPath: string) {
          <Routes>
             <Route path="/" element={<AppShell />}>
                <Route path="characters" element={<HomePage />} />
+               <Route path="episodes" element={<EpisodesPage />} />
                <Route path="about" element={<AboutPage />} />
                <Route path="rpg" element={<RpgCharacterCreationPage />} />
             </Route>
@@ -28,6 +30,7 @@ describe('AppNavbar', () => {
          'href',
          '/characters',
       );
+      expect(screen.getByRole('link', { name: 'Episódios' })).toHaveAttribute('href', '/episodes');
       expect(screen.getByRole('link', { name: 'Rick and Morty RPG' })).toHaveAttribute('href', '/rpg');
    });
 
@@ -41,6 +44,12 @@ describe('AppNavbar', () => {
       renderShell('/about');
       const about = screen.getByRole('link', { name: 'Sobre mim' });
       expect(about.className).toMatch(/border-primary/);
+   });
+
+   it('marks the episodes tab active on /episodes', () => {
+      renderShell('/episodes');
+      const episodes = screen.getByRole('link', { name: 'Episódios' });
+      expect(episodes.className).toMatch(/border-primary/);
    });
 
    it('marks the rpg tab active on /rpg', () => {

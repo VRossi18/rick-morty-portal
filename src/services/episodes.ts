@@ -1,0 +1,39 @@
+import api from './api';
+import type { ApiResponse, Episode } from '../types/api';
+
+export type EpisodeListFilters = {
+   name?: string;
+   episode?: string;
+};
+
+function toApiParams(page: number, filters: EpisodeListFilters): Record<string, string | number> {
+   const params: Record<string, string | number> = { page };
+
+   const name = filters.name?.trim();
+   if (name) {
+      params.name = name;
+   }
+
+   const episode = filters.episode?.trim();
+   if (episode) {
+      params.episode = episode;
+   }
+
+   return params;
+}
+
+export const EpisodeService = {
+   getEpisodes: async (
+      page: number,
+      filters: EpisodeListFilters = {},
+   ): Promise<ApiResponse<Episode>> => {
+      const params = toApiParams(page, filters);
+      const { data } = await api.get<ApiResponse<Episode>>('/episode', { params });
+      return data;
+   },
+
+   getEpisodeById: async (id: number): Promise<Episode> => {
+      const { data } = await api.get<Episode>(`/episode/${id}`);
+      return data;
+   },
+};

@@ -3,6 +3,7 @@
       "ariaMain": "Principal",
       "about": "Sobre mim",
       "characters": "Rick & Morty Personagens",
+      "episodes": "Episódios",
       "rpg": "Rick and Morty RPG"
    },
    "language": {
@@ -35,6 +36,53 @@
          "next": "Próxima",
          "pageOf": "Página {{current}} de {{total}}"
       }
+   },
+   "episodes": {
+      "hero": {
+         "title": "EPISÓDIOS",
+         "titleAccent": "RICK & MORTY",
+         "subtitle": "TEMPORADAS E AVENTURAS DO MULTIVERSO"
+      },
+      "loading": "CARREGANDO EPISÓDIOS...",
+      "errorLoad": "Não foi possível carregar os episódios desta página.",
+      "empty": {
+         "title": "Nenhum episódio encontrado para esses filtros.",
+         "hint": "Ajuste o nome ou os personagens selecionados e tente de novo."
+      },
+      "pagination": {
+         "prev": "Anterior",
+         "next": "Próxima",
+         "pageOf": "Página {{current}} de {{total}}"
+      },
+      "filters": {
+         "searchLabel": "Buscar episódio por nome",
+         "searchPlaceholder": "Buscar por nome (ex.: Pilot, Ricklantis)...",
+         "charactersLabel": "Personagens no episódio",
+         "charactersPlaceholder": "Selecionar personagens...",
+         "charactersSelected": "{{count}} personagem(ns) selecionado(s)",
+         "characterSearchPlaceholder": "Buscar personagem para filtrar...",
+         "characterSearchLoading": "Buscando personagens...",
+         "characterSearchEmpty": "Nenhum personagem encontrado.",
+         "removeCharacter": "Remover {{name}} do filtro",
+         "clear": "Limpar filtros"
+      },
+      "card": {
+         "ariaViewDetails": "Ver detalhes do episódio {{name}}",
+         "airDate": "Exibido em:",
+         "characterCount_one": "{{count}} personagem",
+         "characterCount_other": "{{count}} personagens"
+      }
+   },
+   "episodeDetail": {
+      "back": "Voltar aos episódios",
+      "loading": "ABRINDO DIMENSÃO...",
+      "errorInvalidId": "ID inválido.",
+      "errorNotFound": "Episódio não encontrado.",
+      "errorLoadFailed": "Não foi possível carregar este episódio.",
+      "fieldAirDate": "Data de exibição",
+      "fieldCreated": "Criado em",
+      "charactersHeading": "Personagens neste episódio",
+      "charactersEmpty": "Nenhum personagem listado para este episódio."
    },
    "filters": {
       "searchLabel": "Buscar personagem por nome",
