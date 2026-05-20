@@ -5,7 +5,7 @@ function FlagBr() {
    return (
       <svg
          viewBox="0 0 30 20"
-         className="pointer-events-none h-[18px] w-[27px] overflow-hidden rounded-[3px] shadow-sm"
+         className="pointer-events-none h-[18px] w-[27px] overflow-hidden rounded-[3px] shadow-sm cursor-pointer"
          aria-hidden
       >
          <rect width="30" height="20" fill="#009b3a" />
@@ -20,7 +20,7 @@ function FlagUs() {
    return (
       <svg
          viewBox="0 0 30 20"
-         className="pointer-events-none h-[18px] w-[27px] overflow-hidden rounded-[3px] shadow-sm"
+         className="pointer-events-none h-[18px] w-[27px] overflow-hidden rounded-[3px] shadow-sm cursor-pointer"
          aria-hidden
       >
          <rect width="30" height="20" fill="#b22234" />
@@ -70,7 +70,7 @@ export function LanguageSwitcher() {
 
    const btnClass = (active: boolean) =>
       clsx(
-         'rounded-md p-0.5 transition outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-color)]',
+         'rounded-md p-0.5 transition outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-color)] cursor-pointer',
          active
             ? 'ring-2 ring-primary ring-offset-2 ring-offset-[var(--bg-color)]'
             : 'opacity-75 hover:opacity-100',
