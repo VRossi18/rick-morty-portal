@@ -3,9 +3,28 @@ import { motion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useParams } from 'react-router-dom';
+import { EpisodeDetailLink } from '../components/EpisodeDetailLink';
 import { CharacterService } from '../services/characters';
-import type { Character } from '../types/api';
+import type { Character, Episode, ResourceBase } from '../types/api';
 import type { CharacterLocationState } from '../types/navigation';
+import { formatLocaleDate } from '../utils/formatLocaleDate';
+import { fetchEpisodesByIds } from '../utils/locationEpisodes';
+import { episodeUrlToId, locationUrlToId } from '../utils/locationUrls';
+
+function LocationFieldLink({ place }: { place: ResourceBase }) {
+   const locationId = locationUrlToId(place.url);
+   if (locationId === null) {
+      return <>{place.name}</>;
+   }
+   return (
+      <Link
+         to={`/location/${locationId}`}
+         className="text-primary underline-offset-2 transition hover:underline"
+      >
+         {place.name}
+      </Link>
+   );
+}
 
 type DetailErrorKey = 'invalidId' | 'notFound' | 'loadFailed';
 type FetchErrorKey = Exclude<DetailErrorKey, 'invalidId'>;
@@ -24,20 +43,14 @@ export function CharacterDetailPage() {
    const invalidId = Number.isNaN(id);
 
    const [character, setCharacter] = useState<Character | null>(null);
+   const [episodes, setEpisodes] = useState<Episode[]>([]);
    const [loading, setLoading] = useState(() => !invalidId);
+   const [episodesLoading, setEpisodesLoading] = useState(false);
    const [fetchErrorKey, setFetchErrorKey] = useState<FetchErrorKey | null>(null);
 
    const errorKey: DetailErrorKey | null = invalidId ? 'invalidId' : fetchErrorKey;
 
    const dateLocale = i18n.language.startsWith('en') ? 'en-US' : 'pt-BR';
-
-   const formatDate = (iso: string) => {
-      try {
-         return new Date(iso).toLocaleString(dateLocale);
-      } catch {
-         return iso;
-      }
-   };
 
    useEffect(() => {
       if (invalidId) {
@@ -49,10 +62,30 @@ export function CharacterDetailPage() {
       const load = async () => {
          setLoading(true);
          setFetchErrorKey(null);
+         setEpisodes([]);
          try {
             const data = await CharacterService.getCharacterById(id);
             if (!isMounted) return;
             setCharacter(data);
+            setLoading(false);
+
+            const episodeIds = data.episode
+               .map(episodeUrlToId)
+               .filter((episodeId): episodeId is number => episodeId !== null);
+
+            if (episodeIds.length === 0) {
+               setEpisodes([]);
+               return;
+            }
+
+            setEpisodesLoading(true);
+            try {
+               const related = await fetchEpisodesByIds(episodeIds);
+               if (!isMounted) return;
+               setEpisodes(related);
+            } finally {
+               if (isMounted) setEpisodesLoading(false);
+            }
          } catch (err) {
             if (!isMounted) return;
             if (isAxiosError(err) && err.response?.status === 404) {
@@ -61,8 +94,8 @@ export function CharacterDetailPage() {
                setFetchErrorKey('loadFailed');
             }
             setCharacter(null);
-         } finally {
-            if (isMounted) setLoading(false);
+            setEpisodes([]);
+            setLoading(false);
          }
       };
 
@@ -173,7 +206,7 @@ export function CharacterDetailPage() {
                                  {t('characterDetail.fieldOrigin')}
                               </dt>
                               <dd className="mt-1 font-medium text-foreground">
-                                 {character.origin.name}
+                                 <LocationFieldLink place={character.origin} />
                               </dd>
                            </div>
                            <div className="rounded-xl border border-border/60 bg-card/40 p-4 sm:col-span-2">
@@ -181,17 +214,7 @@ export function CharacterDetailPage() {
                                  {t('characterDetail.fieldLocation')}
                               </dt>
                               <dd className="mt-1 font-medium text-foreground">
-                                 {character.location.name}
-                              </dd>
-                           </div>
-                           <div className="rounded-xl border border-border/60 bg-card/40 p-4 sm:col-span-2">
-                              <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                                 {t('characterDetail.fieldEpisodes')}
-                              </dt>
-                              <dd className="mt-1 font-medium text-foreground">
-                                 {t('characterDetail.episodeCount', {
-                                    count: character.episode.length,
-                                 })}
+                                 <LocationFieldLink place={character.location} />
                               </dd>
                            </div>
                            <div className="rounded-xl border border-border/60 bg-card/40 p-4 sm:col-span-2">
@@ -199,10 +222,36 @@ export function CharacterDetailPage() {
                                  {t('characterDetail.fieldCreated')}
                               </dt>
                               <dd className="mt-1 font-medium text-foreground">
-                                 {formatDate(character.created)}
+                                 {formatLocaleDate(character.created, dateLocale)}
                               </dd>
                            </div>
                         </dl>
+
+                        <section>
+                           <h2 className="mb-4 text-xl font-bold text-foreground">
+                              {t('characterDetail.episodesHeading')}
+                              {episodes.length > 0 ? (
+                                 <span className="ml-2 text-sm font-semibold text-muted-foreground">
+                                    {t('characterDetail.episodeCount', { count: episodes.length })}
+                                 </span>
+                              ) : null}
+                           </h2>
+                           {episodesLoading ? (
+                              <p className="text-sm font-semibold text-primary">
+                                 {t('characterDetail.episodesLoading')}
+                              </p>
+                           ) : episodes.length === 0 ? (
+                              <p className="text-sm text-muted-foreground">
+                                 {t('characterDetail.episodesEmpty')}
+                              </p>
+                           ) : (
+                              <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                 {episodes.map((episode) => (
+                                    <EpisodeDetailLink key={episode.id} episode={episode} />
+                                 ))}
+                              </ul>
+                           )}
+                        </section>
                      </div>
                   </div>
                ) : null}

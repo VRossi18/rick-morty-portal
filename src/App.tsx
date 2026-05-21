@@ -16,6 +16,11 @@ const EpisodeDetailPage = lazyPage(
    () => import('./pages/EpisodeDetailPage'),
    'EpisodeDetailPage',
 );
+const LocationsPage = lazyPage(() => import('./pages/LocationsPage'), 'LocationsPage');
+const LocationDetailPage = lazyPage(
+   () => import('./pages/LocationDetailPage'),
+   'LocationDetailPage',
+);
 const NotFoundPage = lazyPage(() => import('./pages/NotFoundPage'), 'NotFoundPage');
 const RpgCharacterCreationPage = lazyPage(
    () => import('./pages/RpgCharacterCreationPage'),
@@ -43,6 +48,14 @@ export default function App() {
                   element={
                      <Suspense fallback={<RouteFallback />}>
                         <EpisodesPage />
+                     </Suspense>
+                  }
+               />
+               <Route
+                  path="locations"
+                  element={
+                     <Suspense fallback={<RouteFallback />}>
+                        <LocationsPage />
                      </Suspense>
                   }
                />
@@ -75,6 +88,14 @@ export default function App() {
                   element={
                      <Suspense fallback={<RouteFallback />}>
                         <EpisodeDetailPage />
+                     </Suspense>
+                  }
+               />
+               <Route
+                  path="location/:id"
+                  element={
+                     <Suspense fallback={<RouteFallback />}>
+                        <LocationDetailPage />
                      </Suspense>
                   }
                />

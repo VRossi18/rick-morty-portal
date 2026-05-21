@@ -75,16 +75,25 @@ describe('EpisodesPage', () => {
       vi.useRealTimers();
    });
 
-   it('loads episodes on mount with page 1', async () => {
+   it('loads season 1 episodes on mount with episode=S01 filter', async () => {
       renderEpisodes();
       await waitFor(() => {
-         expect(mockedGetEpisodes).toHaveBeenCalledWith(1, {});
+         expect(mockedGetEpisodes).toHaveBeenCalledWith(1, { episode: 'S01' });
       });
       expect(await screen.findByRole('heading', { name: 'Pilot' })).toBeInTheDocument();
    });
 
-   it('renders search and character filter controls', () => {
+   it('renders season arrows, current label, search and character filter', () => {
       renderEpisodes();
+      expect(
+         screen.getByText(i18n.t('episodes.filters.seasonCurrent', { season: 1 })),
+      ).toBeInTheDocument();
+      expect(
+         screen.getByRole('button', { name: i18n.t('episodes.filters.seasonPrev') }),
+      ).toBeDisabled();
+      expect(
+         screen.getByRole('button', { name: i18n.t('episodes.filters.seasonNext') }),
+      ).not.toBeDisabled();
       expect(
          screen.getByPlaceholderText(i18n.t('episodes.filters.searchPlaceholder')),
       ).toBeInTheDocument();
@@ -93,7 +102,31 @@ describe('EpisodesPage', () => {
       ).toBeInTheDocument();
    });
 
-   it('fetches all pages and filters when a character is selected', async () => {
+   it('requests season 2 episodes when next season is clicked', async () => {
+      renderEpisodes();
+      await waitFor(() => expect(mockedGetEpisodes).toHaveBeenCalled());
+
+      mockedGetEpisodes.mockClear();
+      fireEvent.click(screen.getByRole('button', { name: i18n.t('episodes.filters.seasonNext') }));
+
+      await waitFor(() => {
+         expect(mockedGetEpisodes).toHaveBeenCalledWith(1, { episode: 'S02' });
+      });
+      expect(
+         screen.getByText(i18n.t('episodes.filters.seasonCurrent', { season: 2 })),
+      ).toBeInTheDocument();
+   });
+
+   it('shows season in pagination label', async () => {
+      renderEpisodes();
+      expect(
+         await screen.findByText(
+            i18n.t('episodes.pagination.pageOfSeason', { season: 1, current: 1, total: 1 }),
+         ),
+      ).toBeInTheDocument();
+   });
+
+   it('fetches all pages and filters by season and character', async () => {
       mockedGetEpisodes
          .mockResolvedValueOnce({
             info: { count: 2, pages: 2, next: 'x', prev: null },
@@ -103,7 +136,8 @@ describe('EpisodesPage', () => {
                   ...sampleEpisode,
                   id: 2,
                   name: 'Other',
-                  characters: ['https://rickandmortyapi.com/api/character/99'],
+                  episode: 'S02E01',
+                  characters: ['https://rickandmortyapi.com/api/character/1'],
                },
             ],
          })
@@ -127,10 +161,79 @@ describe('EpisodesPage', () => {
       });
 
       expect(await screen.findByRole('heading', { name: 'Pilot' })).toBeInTheDocument();
-      expect(screen.queryByRole('heading', { name: 'Other' })).not.toBeInTheDocument();
+      await waitFor(() => {
+         expect(screen.queryByRole('heading', { name: 'Other' })).not.toBeInTheDocument();
+      });
    });
 
-   it('debounces name search before calling API with name filter', async () => {
+   it('does not show clear filters when only the season changes', async () => {
+      renderEpisodes();
+      await waitFor(() => expect(mockedGetEpisodes).toHaveBeenCalled());
+
+      fireEvent.click(screen.getByRole('button', { name: i18n.t('episodes.filters.seasonNext') }));
+
+      await waitFor(() => {
+         expect(
+            screen.getByText(i18n.t('episodes.filters.seasonCurrent', { season: 2 })),
+         ).toBeInTheDocument();
+      });
+
+      expect(
+         screen.queryByRole('button', { name: i18n.t('episodes.filters.clear') }),
+      ).not.toBeInTheDocument();
+   });
+
+   it('shows clear filters for character selection and clears it without resetting season', async () => {
+      mockedGetEpisodes
+         .mockResolvedValueOnce({
+            info: { count: 1, pages: 1, next: null, prev: null },
+            results: [sampleEpisode],
+         })
+         .mockResolvedValueOnce({
+            info: { count: 1, pages: 1, next: null, prev: null },
+            results: [sampleEpisode],
+         });
+
+      renderEpisodes();
+
+      fireEvent.click(screen.getByRole('button', { name: i18n.t('episodes.filters.seasonNext') }));
+      await waitFor(() => {
+         expect(
+            screen.getByText(i18n.t('episodes.filters.seasonCurrent', { season: 2 })),
+         ).toBeInTheDocument();
+      });
+
+      fireEvent.click(screen.getByLabelText(i18n.t('episodes.filters.charactersLabel')));
+      await waitFor(() => expect(mockedGetCharacters).toHaveBeenCalled());
+      fireEvent.click(await screen.findByRole('option', { name: /Rick Sanchez/i }));
+
+      const clearBtn = await screen.findByRole('button', {
+         name: i18n.t('episodes.filters.clear'),
+      });
+      expect(clearBtn).toBeInTheDocument();
+
+      mockedGetEpisodes.mockClear();
+      fireEvent.click(clearBtn);
+
+      await waitFor(() => {
+         expect(mockedGetEpisodes).toHaveBeenCalledWith(1, { episode: 'S02' });
+      });
+      expect(
+         screen.getByText(i18n.t('episodes.filters.seasonCurrent', { season: 2 })),
+      ).toBeInTheDocument();
+      await waitFor(() => {
+         expect(
+            screen.queryByRole('button', { name: i18n.t('episodes.filters.clear') }),
+         ).not.toBeInTheDocument();
+      });
+      expect(
+         screen.queryByLabelText(
+            i18n.t('episodes.filters.removeCharacter', { name: 'Rick Sanchez' }),
+         ),
+      ).not.toBeInTheDocument();
+   });
+
+   it('debounces name search and keeps season filter on API call', async () => {
       vi.useFakeTimers();
       renderEpisodes();
 
@@ -153,6 +256,6 @@ describe('EpisodesPage', () => {
          await Promise.resolve();
       });
 
-      expect(mockedGetEpisodes).toHaveBeenCalledWith(1, { name: 'Pilot' });
+      expect(mockedGetEpisodes).toHaveBeenCalledWith(1, { name: 'Pilot', episode: 'S01' });
    });
 });

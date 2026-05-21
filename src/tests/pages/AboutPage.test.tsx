@@ -27,5 +27,10 @@ describe('AboutPage', () => {
          'href',
          'https://www.linkedin.com/in/vinicius-pimenta-rossi/',
       );
+      expect(screen.getByRole('link', { name: /WhatsApp/i })).toHaveAttribute(
+         'href',
+         'https://wa.me/5534992150307',
+      );
+      expect(screen.getByText('(34) 99215-0307')).toBeInTheDocument();
    });
 });

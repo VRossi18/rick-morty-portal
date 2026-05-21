@@ -2,17 +2,17 @@ import { motion } from 'framer-motion';
 import { memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import type { Episode } from '../types/api';
-import type { EpisodeLocationState } from '../types/navigation';
+import type { Location } from '../types/api';
+import type { LocationLocationState } from '../types/navigation';
 import type { CardInteraction } from './CharacterCard';
 
 interface Props {
-   episode: Episode;
+   location: Location;
    interaction?: CardInteraction;
    onBeforeNavigate?: (id: number) => void;
 }
 
-function EpisodeCardInner({ episode, interaction = 'normal', onBeforeNavigate }: Props) {
+function LocationCardInner({ location, interaction = 'normal', onBeforeNavigate }: Props) {
    const ref = useRef<HTMLDivElement>(null);
    const navigate = useNavigate();
    const { t } = useTranslation('common');
@@ -29,11 +29,11 @@ function EpisodeCardInner({ episode, interaction = 'normal', onBeforeNavigate }:
       const el = ref.current;
       if (!el) return;
       const r = el.getBoundingClientRect();
-      const state: EpisodeLocationState = {
+      const state: LocationLocationState = {
          portal: { x: r.left + r.width / 2, y: r.top + r.height / 2 },
       };
-      onBeforeNavigate?.(episode.id);
-      navigate(`/episode/${episode.id}`, { state });
+      onBeforeNavigate?.(location.id);
+      navigate(`/location/${location.id}`, { state });
    };
 
    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -55,32 +55,33 @@ function EpisodeCardInner({ episode, interaction = 'normal', onBeforeNavigate }:
          ref={ref}
          role="link"
          tabIndex={0}
-         aria-label={t('episodes.card.ariaViewDetails', { name: episode.name })}
+         aria-label={t('locations.card.ariaViewDetails', { name: location.name })}
          animate={interactionMotion}
          transition={{ duration: 0.22, ease: 'easeOut' }}
          onMouseMove={handleMove}
          onClick={openDetail}
          onKeyDown={handleKeyDown}
-         className="episode-card-item glow-card group h-full cursor-pointer outline-none ring-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-color)]"
+         className="location-card-item glow-card group h-full cursor-pointer outline-none ring-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-color)]"
       >
          <div className="border-b border-primary/20 bg-gradient-to-br from-primary/15 via-transparent to-[var(--portal-cyan)]/10 px-4 py-5">
-            <span className="inline-block rounded-md border border-primary/50 bg-primary/10 px-2.5 py-1 font-mono text-xs font-bold tracking-wider text-primary">
-               {episode.episode}
+            <span className="inline-block rounded-md border border-primary/50 bg-primary/10 px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-primary">
+               {location.type || t('locations.card.typeUnknown')}
             </span>
             <h3 className="mt-3 text-lg font-semibold leading-tight text-foreground line-clamp-2">
-               {episode.name}
+               {location.name}
             </h3>
          </div>
          <div className="space-y-2 p-4 text-sm text-muted-foreground">
             <p>
-               <span className="opacity-60">{t('episodes.card.airDate')}</span> {episode.air_date}
+               <span className="opacity-60">{t('locations.card.dimension')}</span>{' '}
+               {location.dimension}
             </p>
             <p>
-               {t('episodes.card.characterCount', { count: episode.characters.length })}
+               {t('locations.card.residentCount', { count: location.residents.length })}
             </p>
          </div>
       </motion.div>
    );
 }
 
-export const EpisodeCard = memo(EpisodeCardInner);
+export const LocationCard = memo(LocationCardInner);

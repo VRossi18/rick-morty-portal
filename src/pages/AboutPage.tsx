@@ -6,6 +6,7 @@ import {
    IconMail,
    IconMapPin,
    IconGithub,
+   IconWhatsapp,
    IconX,
 } from '../components/about/AboutSocialIcons';
 
@@ -18,6 +19,13 @@ const socialLinks = [
       description: 'viniciusprossi18@gmail.com',
       Icon: IconMail,
       external: false as const,
+   },
+   {
+      href: 'https://wa.me/5534992150307',
+      labelKey: 'social.whatsapp' as const,
+      description: '(34) 99215-0307',
+      Icon: IconWhatsapp,
+      external: true as const,
    },
    {
       href: 'https://www.instagram.com/virossii/',

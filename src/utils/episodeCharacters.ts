@@ -1,7 +1,8 @@
 import { EpisodeService, type EpisodeListFilters } from '../services/episodes';
 import type { Episode, Info } from '../types/api';
 
-export const EPISODES_PAGE_SIZE = 20;
+/** Client-side pages when character filter is active (per season). */
+export const EPISODES_PAGE_SIZE = 8;
 
 export function characterUrlToId(url: string): number | null {
    const match = url.match(/\/character\/(\d+)$/);
@@ -18,12 +19,12 @@ export function episodeCharacterIds(episode: Episode): number[] {
       .filter((id): id is number => id !== null);
 }
 
-export function episodeIncludesAnyCharacter(episode: Episode, characterIds: number[]): boolean {
+export function episodeIncludesAllCharacters(episode: Episode, characterIds: number[]): boolean {
    if (characterIds.length === 0) {
       return true;
    }
-   const selected = new Set(characterIds);
-   return episodeCharacterIds(episode).some((id) => selected.has(id));
+   const inEpisode = new Set(episodeCharacterIds(episode));
+   return characterIds.every((id) => inEpisode.has(id));
 }
 
 export async function fetchAllEpisodes(filters: EpisodeListFilters = {}): Promise<Episode[]> {

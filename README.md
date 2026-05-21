@@ -93,7 +93,7 @@ Workflow file: [`.github/workflows/pipeline.yml`](.github/workflows/pipeline.yml
 - **UI:** React 19, TypeScript, Vite 8
 - **Routing / motion:** React Router 7, Framer Motion (shared `layoutId` on the character image, `AnimatePresence` between routes)
 - **Styling:** Tailwind CSS 4, FlyonUI, `clsx` / `tailwind-merge`
-- **Data:** Axios (`GET /character` and `GET /episode` for lists, detail routes for each — see [`CharacterService`](src/services/characters.ts) and [`EpisodeService`](src/services/episodes.ts))
+- **Data:** Axios (`GET /character`, `GET /episode`, and `GET /location` for lists, detail routes for each — see [`CharacterService`](src/services/characters.ts), [`EpisodeService`](src/services/episodes.ts), and [`LocationService`](src/services/locations.ts))
 - **i18n:** `i18next` + `react-i18next`, copy in [`src/locales/pt/common.json`](src/locales/pt/common.json) / [`src/locales/en/common.json`](src/locales/en/common.json), bootstrap in [`src/i18n.ts`](src/i18n.ts)
 - **Quality:** ESLint (flat config), Vitest, Testing Library, jsdom; **tsx** (dev) to run [`scripts/write-rpg-character-export-sample.ts`](scripts/write-rpg-character-export-sample.ts) for the CI JSON fixture
 - **Learning / experiments:** More real-world practice with the stack above; upcoming **LLM integration** (hosted APIs, structured prompts, or MCP) to support a **playable** tabletop-style loop alongside the UI
@@ -111,8 +111,9 @@ Front-end choices follow **[Vercel React Best Practices](https://skills.sh/verce
 - Paginated grid of characters from the public API
 - **Filters** — search by name (debounced), status, gender, species, and type (selects backed by the API catalog); wired to [`CharacterService.getCharacters`](src/services/characters.ts)
 - **Click a card** (`cursor: pointer`) to open **`/character/:id`**, with a short “portal” feel: other cards dim / ease aside, the image **animates into** the detail layout, and an optional radial overlay uses the click origin when navigation passes `location.state`
-- **Character detail** page: full fields from the API (status, species, type, gender, origin, location, episode count, created), loading and error handling (including 404)
-- **Episodes** at **`/episodes`** — paginated list from `GET /episode`, **masonry column layout** (same palette, glow cards, Framer Motion transitions as the character grid), search by episode name, and a **multi-select character filter** (OR logic, client-side: the API does not filter episodes by character, so all pages are fetched when that filter is active). **`/episode/:id`** shows air date, code, created timestamp, and linked characters with thumbnails.
+- **Character detail** page: full fields from the API (status, species, type, gender, origin, location, episode count, created), loading and error handling (including 404); **origin** and **current location** link to **`/location/:id`** when the API provides a location URL
+- **Episodes** at **`/episodes`** — **season filter** (1–5) with **pagination scoped to the selected season** (API `episode=Sxx` when browsing by season; character multiselect still uses a client-side pass over the catalog). **Responsive grid** (episodes flow left-to-right by episode code, same palette, glow cards, Framer Motion transitions as the character grid), search by episode name, and **multi-select character filter** (AND logic — episode must include every selected character). **`/episode/:id`** shows air date, code, created timestamp, and linked characters with thumbnails.
+- **Locations** at **`/locations`** — paginated grid with **filters** by name (debounced), **type**, and **dimension** (API-backed selects). **`/location/:id`** shows type, dimension, resident count, **residents** linked to **`/character/:id`**, and **related episodes** derived from resident appearances (the API has no direct location→episode link; the UI explains this). Same glow cards and portal-style navigation as episodes.
 - **Back** link to the home grid
 - Loading and error states on the list
 - **About me** page at **`/about`** (author bio, portrait, contact / social links)
@@ -131,7 +132,11 @@ Front-end choices follow **[Vercel React Best Practices](https://skills.sh/verce
 
 2. **Detail page polish (characters & episodes)** — deepen **`/character/:id`** and **`/episode/:id`** beyond the current API fields: cross-links (e.g. from a character to episodes they appear in, from an episode back to filtered lists), optional portal-style transitions on episode detail similar to characters, and small UX tweaks (skeletons, retry, shared layout blocks) so both detail screens feel like one product surface
 
-3. **AI-generated curiosities on detail pages** — add a **“Curiosidade” / “Fun fact”** block on character and episode detail, powered by an LLM but **not** called from the browser with a secret key. Planned shape: a small **BFF** (e.g. extend the Cloud Run deploy with `/api/curiosities/character/:id` and `/api/curiosities/episode/:id`), prompts grounded only in Rick and Morty API data (name, status, species, air date, episode code, cast list), **PT/EN** tied to `i18n.language`, server-side **cache** by entity + locale, optional `localStorage` for repeat visits, loading/error/disclaimer states, a shared `AiCuriosityCard` component + hook, and Vitest mocks (no live LLM in CI). GitHub Pages stays static; production calls go to the hosted API. Alternative for a zero-runtime-cost path: pre-generate JSON in CI into `public/curiosities/` (trade-off: stale content, no per-user freshness)
+3. **AI-generated curiosities on detail pages** — add a **“Curiosidade” / “Fun fact”** block on character and episode detail, powered by an LLM but **not** called from the browser with a secret key. Full BFF contract, prompts, cache, and frontend integration notes: [`docs/spec.md`](docs/spec.md)
+
+4. **Donations (Stripe)** — support the project with fiat payments via **Stripe** (Checkout or Payment Element): preset amounts, optional message, success/cancel return URLs, and a small backend or serverless endpoint to create sessions and verify webhooks (secrets never in the static SPA bundle)
+
+5. **Donations (crypto / Web3)** — accept **cryptocurrency** tips using a **Web3** library (e.g. **ethers** or **wagmi** + wallet connect): show supported chains/tokens, connect wallet, send on-chain transfers to a published address or contract, and clear TX hash / explorer links with localized copy (PT / EN)
 
 ---
 

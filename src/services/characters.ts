@@ -1,5 +1,6 @@
 import api from './api';
 import type { ApiResponse, Character } from '../types/api';
+import { API_CHUNK_SIZE, chunkArray } from '../utils/apiChunks';
 
 /**
  * Filtros da listagem (UI). `status` e `gender` são enviados em minúsculas à API,
@@ -69,7 +70,20 @@ export const CharacterService = {
     * Obtém múltiplos personagens simultaneamente através de um array de IDs.
     */
    getMultipleCharacters: async (ids: number[]): Promise<Character[]> => {
-      const { data } = await api.get<Character[]>(`/character/${ids.join(',')}`);
-      return data;
+      if (ids.length === 0) {
+         return [];
+      }
+
+      const chunks = chunkArray(ids, API_CHUNK_SIZE);
+      const batches = await Promise.all(
+         chunks.map(async (chunk) => {
+            const { data } = await api.get<Character | Character[]>(
+               `/character/${chunk.join(',')}`,
+            );
+            return Array.isArray(data) ? data : [data];
+         }),
+      );
+
+      return batches.flat();
    },
 };

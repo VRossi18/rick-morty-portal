@@ -11,3 +11,10 @@ export type EpisodeLocationState = {
       y: number;
    };
 };
+
+export type LocationLocationState = {
+   portal?: {
+      x: number;
+      y: number;
+   };
+};

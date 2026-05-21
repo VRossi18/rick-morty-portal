@@ -3,7 +3,7 @@ import type { Episode } from '../../types/api';
 import { EpisodeService } from '../../services/episodes';
 import {
    characterUrlToId,
-   episodeIncludesAnyCharacter,
+   episodeIncludesAllCharacters,
    fetchAllEpisodes,
    paginateEpisodes,
 } from '../../utils/episodeCharacters';
@@ -36,11 +36,12 @@ describe('episodeCharacters utils', () => {
       expect(characterUrlToId('invalid')).toBeNull();
    });
 
-   it('episodeIncludesAnyCharacter uses OR logic', () => {
+   it('episodeIncludesAllCharacters uses AND logic', () => {
       const episode = ep(1, [1, 2, 3]);
-      expect(episodeIncludesAnyCharacter(episode, [])).toBe(true);
-      expect(episodeIncludesAnyCharacter(episode, [99])).toBe(false);
-      expect(episodeIncludesAnyCharacter(episode, [2, 99])).toBe(true);
+      expect(episodeIncludesAllCharacters(episode, [])).toBe(true);
+      expect(episodeIncludesAllCharacters(episode, [99])).toBe(false);
+      expect(episodeIncludesAllCharacters(episode, [2, 99])).toBe(false);
+      expect(episodeIncludesAllCharacters(episode, [1, 2])).toBe(true);
    });
 
    it('paginateEpisodes slices and builds info', () => {

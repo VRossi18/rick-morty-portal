@@ -4,7 +4,8 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import i18n from '../../i18n';
 import { CharacterService } from '../../services/characters';
-import type { Character } from '../../types/api';
+import { EpisodeService } from '../../services/episodes';
+import type { Character, Episode } from '../../types/api';
 import { CharacterDetailPage } from '../../pages/CharacterDetailPage';
 
 vi.mock('../../services/characters', () => ({
@@ -12,6 +13,22 @@ vi.mock('../../services/characters', () => ({
       getCharacterById: vi.fn(),
    },
 }));
+
+vi.mock('../../services/episodes', () => ({
+   EpisodeService: {
+      getMultipleEpisodes: vi.fn(),
+   },
+}));
+
+const mockEpisode: Episode = {
+   id: 1,
+   name: 'Pilot',
+   air_date: 'December 2, 2013',
+   episode: 'S01E01',
+   characters: [],
+   url: 'https://rickandmortyapi.com/api/episode/1',
+   created: '2017-11-10T12:56:33.798Z',
+};
 
 const mockCharacter: Character = {
    id: 2,
@@ -41,6 +58,7 @@ function renderAt(path: string) {
 describe('CharacterDetailPage', () => {
    beforeEach(() => {
       vi.mocked(CharacterService.getCharacterById).mockReset();
+      vi.mocked(EpisodeService.getMultipleEpisodes).mockReset();
    });
 
    it('shows invalid id message without calling the API', () => {
@@ -50,15 +68,18 @@ describe('CharacterDetailPage', () => {
       expect(screen.getByText(i18n.t('characterDetail.errorInvalidId'))).toBeInTheDocument();
    });
 
-   it('loads character and shows fields', async () => {
+   it('loads character and shows fields with episode links', async () => {
       vi.mocked(CharacterService.getCharacterById).mockResolvedValue(mockCharacter);
+      vi.mocked(EpisodeService.getMultipleEpisodes).mockResolvedValue([mockEpisode]);
 
       renderAt('/character/2');
 
       expect(await screen.findByRole('heading', { name: 'Morty Smith' })).toBeInTheDocument();
-      expect(
-         screen.getByText(i18n.t('characterDetail.episodeCount', { count: 1 })),
-      ).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /Pilot/i })).toHaveAttribute('href', '/episode/1');
+      expect(EpisodeService.getMultipleEpisodes).toHaveBeenCalledWith([1]);
+      const earthLinks = screen.getAllByRole('link', { name: 'Earth' });
+      expect(earthLinks[0]).toHaveAttribute('href', '/location/1');
+      expect(earthLinks[1]).toHaveAttribute('href', '/location/20');
       expect(CharacterService.getCharacterById).toHaveBeenCalledWith(2);
    });
 

@@ -74,4 +74,27 @@ describe('CharacterService', () => {
       await CharacterService.getMultipleCharacters([1, 2, 3]);
       expect(mockedGet).toHaveBeenCalledWith('/character/1,2,3');
    });
+
+   it('getMultipleCharacters fetches chunks in parallel when ids exceed chunk size', async () => {
+      const ids = Array.from({ length: 25 }, (_, i) => i + 1);
+      const chunk1 = ids.slice(0, 20).map((id) => ({ id, name: `C${id}` }));
+      const chunk2 = ids.slice(20).map((id) => ({ id, name: `C${id}` }));
+
+      mockedGet
+         .mockResolvedValueOnce({ data: chunk1 as Character[] })
+         .mockResolvedValueOnce({ data: chunk2 as Character[] });
+
+      const result = await CharacterService.getMultipleCharacters(ids);
+
+      expect(mockedGet).toHaveBeenCalledTimes(2);
+      expect(mockedGet).toHaveBeenCalledWith(`/character/${ids.slice(0, 20).join(',')}`);
+      expect(mockedGet).toHaveBeenCalledWith(`/character/${ids.slice(20).join(',')}`);
+      expect(result).toHaveLength(25);
+   });
+
+   it('getMultipleCharacters returns empty array for no ids', async () => {
+      const result = await CharacterService.getMultipleCharacters([]);
+      expect(result).toEqual([]);
+      expect(mockedGet).not.toHaveBeenCalled();
+   });
 });

@@ -1,5 +1,6 @@
 import api from './api';
 import type { ApiResponse, Episode } from '../types/api';
+import { API_CHUNK_SIZE, chunkArray } from '../utils/apiChunks';
 
 export type EpisodeListFilters = {
    name?: string;
@@ -35,5 +36,21 @@ export const EpisodeService = {
    getEpisodeById: async (id: number): Promise<Episode> => {
       const { data } = await api.get<Episode>(`/episode/${id}`);
       return data;
+   },
+
+   getMultipleEpisodes: async (ids: number[]): Promise<Episode[]> => {
+      if (ids.length === 0) {
+         return [];
+      }
+
+      const chunks = chunkArray(ids, API_CHUNK_SIZE);
+      const batches = await Promise.all(
+         chunks.map(async (chunk) => {
+            const { data } = await api.get<Episode | Episode[]>(`/episode/${chunk.join(',')}`);
+            return Array.isArray(data) ? data : [data];
+         }),
+      );
+
+      return batches.flat();
    },
 };

@@ -1,10 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
+import i18n from '../../i18n';
 import { AppShell } from '../../components/AppShell';
 import { AboutPage } from '../../pages/AboutPage';
 import { EpisodesPage } from '../../pages/EpisodesPage';
 import { HomePage } from '../../pages/HomePage';
+import { LocationsPage } from '../../pages/LocationsPage';
 import { RpgCharacterCreationPage } from '../../pages/RpgCharacterCreationPage';
 
 function renderShell(initialPath: string) {
@@ -14,6 +16,7 @@ function renderShell(initialPath: string) {
             <Route path="/" element={<AppShell />}>
                <Route path="characters" element={<HomePage />} />
                <Route path="episodes" element={<EpisodesPage />} />
+               <Route path="locations" element={<LocationsPage />} />
                <Route path="about" element={<AboutPage />} />
                <Route path="rpg" element={<RpgCharacterCreationPage />} />
             </Route>
@@ -26,17 +29,18 @@ describe('AppNavbar', () => {
    it('renders main nav links', () => {
       renderShell('/characters');
       expect(screen.getByRole('link', { name: 'Sobre mim' })).toHaveAttribute('href', '/about');
-      expect(screen.getByRole('link', { name: 'Rick & Morty Personagens' })).toHaveAttribute(
+      expect(screen.getByRole('link', { name: i18n.t('nav.characters') })).toHaveAttribute(
          'href',
          '/characters',
       );
       expect(screen.getByRole('link', { name: 'Episódios' })).toHaveAttribute('href', '/episodes');
+      expect(screen.getByRole('link', { name: 'Localizações' })).toHaveAttribute('href', '/locations');
       expect(screen.getByRole('link', { name: 'Rick and Morty RPG' })).toHaveAttribute('href', '/rpg');
    });
 
    it('marks the characters tab active on /characters', () => {
       renderShell('/characters');
-      const chars = screen.getByRole('link', { name: 'Rick & Morty Personagens' });
+      const chars = screen.getByRole('link', { name: i18n.t('nav.characters') });
       expect(chars.className).toMatch(/border-primary/);
    });
 

@@ -4,6 +4,7 @@
       "about": "Sobre mim",
       "characters": "Personagens",
       "episodes": "Episódios",
+      "locations": "Localizações",
       "rpg": "Rick and Morty RPG"
    },
    "language": {
@@ -47,14 +48,19 @@
       "errorLoad": "Não foi possível carregar os episódios desta página.",
       "empty": {
          "title": "Nenhum episódio encontrado para esses filtros.",
-         "hint": "Ajuste o nome ou os personagens selecionados e tente de novo."
+         "hint": "Ajuste o nome ou os personagens selecionados e tente de novo — com vários personagens, o episódio precisa incluir todos eles."
       },
       "pagination": {
          "prev": "Anterior",
          "next": "Próxima",
-         "pageOf": "Página {{current}} de {{total}}"
+         "pageOf": "Página {{current}} de {{total}}",
+         "pageOfSeason": "Temporada {{season}} · Página {{current}} de {{total}}"
       },
       "filters": {
+         "seasonLabel": "Temporada",
+         "seasonCurrent": "Temporada {{season}}",
+         "seasonPrev": "Temporada anterior",
+         "seasonNext": "Próxima temporada",
          "searchLabel": "Buscar episódio por nome",
          "searchPlaceholder": "Buscar por nome (ex.: Pilot, Ricklantis)...",
          "charactersLabel": "Personagens no episódio",
@@ -72,6 +78,58 @@
          "characterCount_one": "{{count}} personagem",
          "characterCount_other": "{{count}} personagens"
       }
+   },
+   "locations": {
+      "hero": {
+         "title": "LOCALIZAÇÕES",
+         "titleAccent": "RICK & MORTY",
+         "subtitle": "PLANETAS, DIMENSÕES E LUGARES DO MULTIVERSO"
+      },
+      "loading": "CARREGANDO LOCALIZAÇÕES...",
+      "errorLoad": "Não foi possível carregar as localizações desta página.",
+      "empty": {
+         "title": "Nenhuma localização encontrada para esses filtros.",
+         "hint": "Ajuste o nome, tipo ou dimensão e tente de novo — a API oficial não encontrou resultados para esta combinação."
+      },
+      "pagination": {
+         "prev": "Anterior",
+         "next": "Próxima",
+         "pageOf": "Página {{current}} de {{total}}"
+      },
+      "filters": {
+         "searchLabel": "Buscar localização por nome",
+         "searchPlaceholder": "Buscar por nome (ex.: Earth, Citadel)...",
+         "typeLabel": "Tipo",
+         "typeAll": "Tipo (todos)",
+         "dimensionLabel": "Dimensão",
+         "dimensionAll": "Dimensão (todas)",
+         "clear": "Limpar filtros"
+      },
+      "card": {
+         "ariaViewDetails": "Ver detalhes da localização {{name}}",
+         "dimension": "Dimensão:",
+         "typeUnknown": "Desconhecido",
+         "residentCount_one": "{{count}} residente",
+         "residentCount_other": "{{count}} residentes"
+      }
+   },
+   "locationDetail": {
+      "back": "Voltar às localizações",
+      "loading": "ABRINDO DIMENSÃO...",
+      "errorInvalidId": "ID inválido.",
+      "errorNotFound": "Localização não encontrada.",
+      "errorLoadFailed": "Não foi possível carregar esta localização.",
+      "typeUnknown": "Desconhecido",
+      "fieldDimension": "Dimensão",
+      "fieldResidents": "Residentes",
+      "fieldCreated": "Criado em",
+      "residentsHeading": "Residentes neste local",
+      "residentsLoading": "Carregando residentes...",
+      "residentsEmpty": "Nenhum residente listado para esta localização.",
+      "episodesHeading": "Episódios relacionados",
+      "episodesNote": "Lista episódios em que os residentes deste local aparecem — a API não associa localização a episódio diretamente.",
+      "episodesLoading": "Carregando episódios relacionados...",
+      "episodesEmpty": "Nenhum episódio encontrado para os residentes deste local."
    },
    "episodeDetail": {
       "back": "Voltar aos episódios",
@@ -107,10 +165,12 @@
       "fieldGender": "Gênero",
       "fieldOrigin": "Origem",
       "fieldLocation": "Local atual",
-      "fieldEpisodes": "Episódios (URLs na API)",
       "fieldCreated": "Criado em",
-      "episodeCount_one": "{{count}} episódio",
-      "episodeCount_other": "{{count}} episódios"
+      "episodesHeading": "Episódios",
+      "episodesLoading": "Carregando episódios...",
+      "episodesEmpty": "Nenhum episódio listado para este personagem.",
+      "episodeCount_one": "({{count}} episódio)",
+      "episodeCount_other": "({{count}} episódios)"
    },
    "card": {
       "ariaViewDetails": "Ver detalhes de {{name}}",
@@ -129,6 +189,7 @@
    },
    "social": {
       "email": "Email",
+      "whatsapp": "WhatsApp",
       "instagram": "Instagram",
       "linkedin": "LinkedIn",
       "x": "X",

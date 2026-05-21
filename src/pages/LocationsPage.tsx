@@ -3,68 +3,51 @@ import { motion } from 'framer-motion';
 import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import type { SelectedCharacter } from '../components/CharacterMultiSelect';
-import { EpisodeCard } from '../components/EpisodeCard';
-import { EpisodeFiltersBar } from '../components/EpisodeFiltersBar';
-import { EpisodesHero } from '../components/EpisodesHero';
-import { EpisodeService, type EpisodeListFilters } from '../services/episodes';
-import type { Episode, Info } from '../types/api';
-import {
-   episodeIncludesAllCharacters,
-   fetchAllEpisodes,
-   paginateEpisodes,
-} from '../utils/episodeCharacters';
-import {
-   filterEpisodesBySeason,
-   seasonToApiFilter,
-   sortEpisodesByCode,
-} from '../utils/episodeSeason';
+import { LocationCard } from '../components/LocationCard';
+import { LocationFiltersBar } from '../components/LocationFiltersBar';
+import { LocationsHero } from '../components/LocationsHero';
+import { LocationService, type LocationListFilters } from '../services/locations';
+import type { Info, Location } from '../types/api';
 
 const emptyInfo: Info = { count: 0, pages: 1, next: null, prev: null };
 
-const DEFAULT_SEASON = 1;
-
-export function EpisodesPage() {
+export function LocationsPage() {
    const { t } = useTranslation('common');
-   const [episodes, setEpisodes] = useState<Episode[]>([]);
+   const [locations, setLocations] = useState<Location[]>([]);
    const [loading, setLoading] = useState(true);
    const [page, setPage] = useState(1);
    const [pageInfo, setPageInfo] = useState<Info | null>(null);
    const [error, setError] = useState<string | null>(null);
    const [transitionFocusId, setTransitionFocusId] = useState<number | null>(null);
 
-   const [season, setSeason] = useState(DEFAULT_SEASON);
    const [nameDraft, setNameDraft] = useState('');
    const [appliedName, setAppliedName] = useState('');
    const lastCommittedName = useRef('');
 
-   const [selectedCharacters, setSelectedCharacters] = useState<SelectedCharacter[]>([]);
-
-   const selectedCharacterIds = useMemo(
-      () => selectedCharacters.map((c) => c.id),
-      [selectedCharacters],
-   );
+   const [type, setType] = useState('');
+   const [dimension, setDimension] = useState('');
 
    const hasActiveFilters = useMemo(
-      () => nameDraft.trim() !== '' || selectedCharacters.length > 0,
-      [nameDraft, selectedCharacters.length],
+      () => nameDraft.trim() !== '' || type !== '' || dimension !== '',
+      [nameDraft, type, dimension],
    );
 
    const clearAllFilters = useCallback(() => {
       lastCommittedName.current = '';
       setNameDraft('');
       setAppliedName('');
-      setSelectedCharacters([]);
+      setType('');
+      setDimension('');
       setPage(1);
    }, []);
 
-   const handleSeasonChange = useCallback((value: number) => {
-      setSeason(value);
+   const handleTypeChange = useCallback((value: string) => {
+      setType(value);
       setPage(1);
    }, []);
 
-   const handleSelectedCharactersChange = useCallback((next: SelectedCharacter[]) => {
-      setSelectedCharacters(next);
+   const handleDimensionChange = useCallback((value: string) => {
+      setDimension(value);
       setPage(1);
    }, []);
 
@@ -82,12 +65,13 @@ export function EpisodesPage() {
       return () => window.clearTimeout(id);
    }, [nameDraft]);
 
-   const listFilters: EpisodeListFilters = useMemo(
+   const listFilters: LocationListFilters = useMemo(
       () => ({
-         episode: seasonToApiFilter(season),
          ...(appliedName ? { name: appliedName } : {}),
+         ...(type ? { type } : {}),
+         ...(dimension ? { dimension } : {}),
       }),
-      [appliedName, season],
+      [appliedName, type, dimension],
    );
 
    useEffect(() => {
@@ -98,46 +82,31 @@ export function EpisodesPage() {
          setError(null);
 
          try {
-            if (selectedCharacterIds.length > 0) {
-               const all = await fetchAllEpisodes(
-                  appliedName ? { name: appliedName } : {},
-               );
-               const forSeason = filterEpisodesBySeason(all, season);
-               const filtered = forSeason.filter((ep) =>
-                  episodeIncludesAllCharacters(ep, selectedCharacterIds),
-               );
-               const sorted = sortEpisodesByCode(filtered);
-               const paged = paginateEpisodes(sorted, page);
+            const data = await LocationService.getLocations(page, listFilters);
 
-               if (!isMounted) return;
-
-               startTransition(() => {
-                  setEpisodes(paged.results);
-                  setPageInfo(paged.info);
-               });
-            } else {
-               const data = await EpisodeService.getEpisodes(page, listFilters);
-
-               if (!isMounted) return;
-
-               startTransition(() => {
-                  setEpisodes(sortEpisodesByCode(data.results));
-                  setPageInfo(data.info);
-               });
+            if (!isMounted) {
+               return;
             }
+
+            startTransition(() => {
+               setLocations(data.results);
+               setPageInfo(data.info);
+            });
          } catch (err) {
-            if (!isMounted) return;
+            if (!isMounted) {
+               return;
+            }
 
             if (isAxiosError(err) && err.response?.status === 404) {
                startTransition(() => {
-                  setEpisodes([]);
+                  setLocations([]);
                   setPageInfo(emptyInfo);
                   setError(null);
                });
             } else {
-               console.error('Erro ao carregar episódios:', err);
+               console.error('Erro ao carregar localizações:', err);
                startTransition(() => {
-                  setError(t('episodes.errorLoad'));
+                  setError(t('locations.errorLoad'));
                });
             }
          } finally {
@@ -154,7 +123,7 @@ export function EpisodesPage() {
       return () => {
          isMounted = false;
       };
-   }, [page, listFilters, selectedCharacterIds, season, appliedName, t]);
+   }, [page, listFilters, t]);
 
    const handleBeforeNavigate = useCallback((id: number) => {
       flushSync(() => {
@@ -178,7 +147,7 @@ export function EpisodesPage() {
       }
    }, [pageInfo?.next]);
 
-   const showEmptyResults = !loading && !error && episodes.length === 0;
+   const showEmptyResults = !loading && !error && locations.length === 0;
 
    return (
       <motion.div
@@ -188,15 +157,15 @@ export function EpisodesPage() {
          exit={{ opacity: 0 }}
          transition={{ duration: 0.28, ease: 'easeOut' }}
       >
-         <EpisodesHero />
+         <LocationsHero />
          <main className="mx-auto max-w-[1400px] px-6 pb-20">
-            <EpisodeFiltersBar
-               season={season}
-               onSeasonChange={handleSeasonChange}
+            <LocationFiltersBar
                nameDraft={nameDraft}
                onNameDraftChange={setNameDraft}
-               selectedCharacters={selectedCharacters}
-               onSelectedCharactersChange={handleSelectedCharactersChange}
+               type={type}
+               onTypeChange={handleTypeChange}
+               dimension={dimension}
+               onDimensionChange={handleDimensionChange}
                hasActiveFilters={hasActiveFilters}
                onClearFilters={clearAllFilters}
             />
@@ -209,27 +178,27 @@ export function EpisodesPage() {
                ) : showEmptyResults ? (
                   <div className="flex min-h-[16rem] flex-col items-center justify-center gap-2 px-4 text-center">
                      <p className="text-base font-semibold text-[var(--text-color)]">
-                        {t('episodes.empty.title')}
+                        {t('locations.empty.title')}
                      </p>
                      <p className="max-w-md text-sm text-muted-foreground">
-                        {t('episodes.empty.hint')}
+                        {t('locations.empty.hint')}
                      </p>
                   </div>
                ) : (
                   <div
                      className={`grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-3 ${loading ? 'pointer-events-none opacity-45' : ''}`}
                   >
-                     {episodes.map((ep) => {
+                     {locations.map((loc) => {
                         const interaction =
                            transitionFocusId === null
                               ? 'normal'
-                              : transitionFocusId === ep.id
+                              : transitionFocusId === loc.id
                                 ? 'source'
                                 : 'dimmed';
                         return (
-                           <EpisodeCard
-                              key={ep.id}
-                              episode={ep}
+                           <LocationCard
+                              key={loc.id}
+                              location={loc}
                               interaction={interaction}
                               onBeforeNavigate={handleBeforeNavigate}
                            />
@@ -246,7 +215,7 @@ export function EpisodesPage() {
                   >
                      <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent" />
                      <p className="animate-pulse text-sm font-bold text-primary">
-                        {t('episodes.loading')}
+                        {t('locations.loading')}
                      </p>
                   </div>
                ) : null}
@@ -259,15 +228,11 @@ export function EpisodesPage() {
                disabled={!pageInfo?.prev || loading}
                className="rounded-md border border-primary/40 px-4 py-2 text-sm font-semibold text-[var(--text-color)] transition hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
             >
-               {t('episodes.pagination.prev')}
+               {t('locations.pagination.prev')}
             </button>
 
             <span className="text-sm font-semibold text-[var(--text-color)]">
-               {t('episodes.pagination.pageOfSeason', {
-                  season,
-                  current: page,
-                  total: pageInfo?.pages ?? 1,
-               })}
+               {t('locations.pagination.pageOf', { current: page, total: pageInfo?.pages ?? 1 })}
             </span>
 
             <button
@@ -276,7 +241,7 @@ export function EpisodesPage() {
                disabled={!pageInfo?.next || loading}
                className="rounded-md border border-primary/40 px-4 py-2 text-sm font-semibold text-[var(--text-color)] transition hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
             >
-               {t('episodes.pagination.next')}
+               {t('locations.pagination.next')}
             </button>
          </footer>
       </motion.div>
