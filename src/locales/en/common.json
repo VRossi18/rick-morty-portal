@@ -5,7 +5,8 @@
       "characters": "Characters",
       "episodes": "Episodes",
       "locations": "Locations",
-      "rpg": "Rick and Morty RPG"
+      "rpg": "Rick and Morty RPG",
+      "support": "Support"
    },
    "language": {
       "switchToPt": "Switch language to Portuguese",
@@ -179,6 +180,38 @@
    },
    "theme": {
       "toggle": "Toggle theme"
+   },
+   "donations": {
+      "modalTitle": "Support the project",
+      "close": "Close",
+      "tabCrypto": "Crypto",
+      "tabFiat": "PIX / Stripe",
+      "disclaimerTitle": "Donations are optional",
+      "disclaimerBody": "This portal is an educational project to practice React, TypeScript, and Web3. You are not required to donate — any support helps keep the experiment running.",
+      "crypto": {
+         "network": "Network: Polygon (MATIC)",
+         "connectWallet": "Connect wallet",
+         "connecting": "Connecting...",
+         "disconnect": "Disconnect",
+         "wrongNetwork": "Your wallet is not on Polygon. Switch networks to continue.",
+         "switchNetwork": "Switch to Polygon",
+         "switching": "Switching network...",
+         "amountLabel": "Amount in MATIC",
+         "customPlaceholder": "Custom amount (e.g. 0.25)",
+         "donate": "Donate via contract",
+         "pending": "Waiting for confirmation...",
+         "success": "Donation sent!",
+         "explorerLink": "View on Polygonscan",
+         "contractNotConfigured": "Donation contract is not configured. Set VITE_DONATION_CONTRACT_ADDRESS in the environment.",
+         "invalidAmount": "Enter an amount greater than zero.",
+         "errorGeneric": "Could not complete the transaction. Please try again."
+      },
+      "fiat": {
+         "comingSoon": "Coming soon",
+         "pixNote": "PIX donations via Stripe will be enabled in a future release.",
+         "stripeNote": "International card payments are also planned.",
+         "pixButton": "Donate with PIX (coming soon)"
+      }
    },
    "about": {
       "sectionAria": "About me",

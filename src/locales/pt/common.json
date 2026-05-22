@@ -5,7 +5,8 @@
       "characters": "Personagens",
       "episodes": "Episódios",
       "locations": "Localizações",
-      "rpg": "Rick and Morty RPG"
+      "rpg": "Rick and Morty RPG",
+      "support": "Apoiar"
    },
    "language": {
       "switchToPt": "Mudar idioma para português",
@@ -179,6 +180,38 @@
    },
    "theme": {
       "toggle": "Trocar tema"
+   },
+   "donations": {
+      "modalTitle": "Apoiar o projeto",
+      "close": "Fechar",
+      "tabCrypto": "Crypto",
+      "tabFiat": "PIX / Stripe",
+      "disclaimerTitle": "Doação opcional",
+      "disclaimerBody": "Este portal é um projeto educacional para praticar React, TypeScript e Web3. Não há obrigação de doar — qualquer apoio ajuda a manter o experimento no ar.",
+      "crypto": {
+         "network": "Rede: Polygon (MATIC)",
+         "connectWallet": "Conectar carteira",
+         "connecting": "Conectando...",
+         "disconnect": "Desconectar",
+         "wrongNetwork": "Sua carteira não está na Polygon. Troque de rede para continuar.",
+         "switchNetwork": "Trocar para Polygon",
+         "switching": "Trocando rede...",
+         "amountLabel": "Valor em MATIC",
+         "customPlaceholder": "Outro valor (ex. 0.25)",
+         "donate": "Doar via contrato",
+         "pending": "Aguardando confirmação...",
+         "success": "Doação enviada!",
+         "explorerLink": "Ver no Polygonscan",
+         "contractNotConfigured": "Contrato de doação não configurado. Defina VITE_DONATION_CONTRACT_ADDRESS no ambiente.",
+         "invalidAmount": "Informe um valor maior que zero.",
+         "errorGeneric": "Não foi possível concluir a transação. Tente novamente."
+      },
+      "fiat": {
+         "comingSoon": "Em breve",
+         "pixNote": "Doações via PIX com Stripe serão habilitadas em uma próxima versão.",
+         "stripeNote": "Pagamentos internacionais com cartão também estão planejados.",
+         "pixButton": "Doar com PIX (em breve)"
+      }
    },
    "about": {
       "sectionAria": "Sobre mim",

@@ -117,6 +117,7 @@ Front-end choices follow **[Vercel React Best Practices](https://skills.sh/verce
 - **Back** link to the home grid
 - Loading and error states on the list
 - **About me** page at **`/about`** (author bio, portrait, contact / social links)
+- **Donations modal** — navbar **Support / Apoiar** opens a dialog with an educational disclaimer (donations optional), **Crypto** tab on **Polygon** via **wagmi** + contract `donate()` payable, and a **PIX / Stripe** tab placeholder for future fiat flows. See [`DonationModal`](src/components/donations/DonationModal.tsx) and [`docs/donations-contract.md`](docs/donations-contract.md)
 - **Internationalization (PT / EN)** — UI strings live in locale JSON; language is stored in **`localStorage`** (`portal.locale`, default `pt`); **`document.documentElement.lang`** stays in sync; **navbar flag switcher** ([`LanguageSwitcher`](src/components/LanguageSwitcher.tsx))
 - Light / dark theme toggle
 - Responsive layout
@@ -134,9 +135,25 @@ Front-end choices follow **[Vercel React Best Practices](https://skills.sh/verce
 
 3. **AI-generated curiosities on detail pages** — add a **“Curiosidade” / “Fun fact”** block on character and episode detail, powered by an LLM but **not** called from the browser with a secret key. Full BFF contract, prompts, cache, and frontend integration notes: [`docs/spec.md`](docs/spec.md)
 
-4. **Donations (Stripe)** — support the project with fiat payments via **Stripe** (Checkout or Payment Element): preset amounts, optional message, success/cancel return URLs, and a small backend or serverless endpoint to create sessions and verify webhooks (secrets never in the static SPA bundle)
+4. **Donations (Stripe / PIX)** — wire the existing modal fiat tab to **Stripe** (PIX first, international cards later): Checkout or Payment Element, preset amounts, backend/session endpoint, webhooks (secrets never in the SPA bundle)
 
-5. **Donations (crypto / Web3)** — accept **cryptocurrency** tips using a **Web3** library (e.g. **ethers** or **wagmi** + wallet connect): show supported chains/tokens, connect wallet, send on-chain transfers to a published address or contract, and clear TX hash / explorer links with localized copy (PT / EN)
+5. **Donations (crypto enhancements)** — WalletConnect, optional on-chain donation history, and contract deploy automation beyond the current Polygon + injected-wallet flow
+
+### Donations (local dev)
+
+Install deps (already in `package.json`): `wagmi`, `viem`, `@tanstack/react-query`.
+
+1. Deploy the reference contract from [`docs/donations-contract.md`](docs/donations-contract.md) to Polygon (chain id `137`).
+2. Copy [`.env.example`](.env.example) to `.env` and set:
+
+```env
+VITE_DONATION_CONTRACT_ADDRESS=0xYourDeployedAddress
+# optional
+VITE_POLYGON_RPC_URL=
+VITE_WALLETCONNECT_PROJECT_ID=
+```
+
+3. Run `pnpm dev`, click **Apoiar / Support** in the navbar, connect MetaMask on Polygon, and send a test donation.
 
 ---
 

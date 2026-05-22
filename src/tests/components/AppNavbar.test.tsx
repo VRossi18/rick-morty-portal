@@ -1,8 +1,9 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 import i18n from '../../i18n';
 import { AppShell } from '../../components/AppShell';
+import { TestProviders } from '../testProviders';
 import { AboutPage } from '../../pages/AboutPage';
 import { EpisodesPage } from '../../pages/EpisodesPage';
 import { HomePage } from '../../pages/HomePage';
@@ -11,17 +12,19 @@ import { RpgCharacterCreationPage } from '../../pages/RpgCharacterCreationPage';
 
 function renderShell(initialPath: string) {
    return render(
-      <MemoryRouter initialEntries={[initialPath]}>
-         <Routes>
-            <Route path="/" element={<AppShell />}>
-               <Route path="characters" element={<HomePage />} />
-               <Route path="episodes" element={<EpisodesPage />} />
-               <Route path="locations" element={<LocationsPage />} />
-               <Route path="about" element={<AboutPage />} />
-               <Route path="rpg" element={<RpgCharacterCreationPage />} />
-            </Route>
-         </Routes>
-      </MemoryRouter>,
+      <TestProviders>
+         <MemoryRouter initialEntries={[initialPath]}>
+            <Routes>
+               <Route path="/" element={<AppShell />}>
+                  <Route path="characters" element={<HomePage />} />
+                  <Route path="episodes" element={<EpisodesPage />} />
+                  <Route path="locations" element={<LocationsPage />} />
+                  <Route path="about" element={<AboutPage />} />
+                  <Route path="rpg" element={<RpgCharacterCreationPage />} />
+               </Route>
+            </Routes>
+         </MemoryRouter>
+      </TestProviders>,
    );
 }
 
@@ -36,6 +39,16 @@ describe('AppNavbar', () => {
       expect(screen.getByRole('link', { name: 'Episódios' })).toHaveAttribute('href', '/episodes');
       expect(screen.getByRole('link', { name: 'Localizações' })).toHaveAttribute('href', '/locations');
       expect(screen.getByRole('link', { name: 'Rick and Morty RPG' })).toHaveAttribute('href', '/rpg');
+      expect(screen.getByRole('button', { name: 'Apoiar' })).toBeInTheDocument();
+   });
+
+   it('opens donation modal when support button is clicked', () => {
+      renderShell('/characters');
+
+      fireEvent.click(screen.getByRole('button', { name: 'Apoiar' }));
+
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+      expect(screen.getByText(i18n.t('donations.disclaimerTitle'))).toBeInTheDocument();
    });
 
    it('marks the characters tab active on /characters', () => {
