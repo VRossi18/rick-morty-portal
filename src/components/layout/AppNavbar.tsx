@@ -1,8 +1,8 @@
 import clsx from 'clsx';
-import { useState } from 'react';
+import { Suspense, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
-import { DonationModal } from './donations/DonationModal';
+import { LazyDonationModal, preloadDonationModal } from '../donations/lazyDonationModal';
 import { LanguageSwitcher } from './LanguageSwitcher';
 
 const tabClass = ({ isActive }: { isActive: boolean }) =>
@@ -16,6 +16,7 @@ const tabClass = ({ isActive }: { isActive: boolean }) =>
 export function AppNavbar() {
    const { t } = useTranslation('common');
    const [donationOpen, setDonationOpen] = useState(false);
+   const closeDonationModal = useCallback(() => setDonationOpen(false), []);
 
    return (
       <header
@@ -45,6 +46,8 @@ export function AppNavbar() {
                <button
                   type="button"
                   onClick={() => setDonationOpen(true)}
+                  onMouseEnter={preloadDonationModal}
+                  onFocus={preloadDonationModal}
                   className="rounded-lg border border-primary/40 px-3 py-2 text-sm font-semibold text-primary transition hover:border-primary hover:bg-primary/10"
                >
                   {t('nav.support')}
@@ -52,7 +55,11 @@ export function AppNavbar() {
                <LanguageSwitcher />
             </div>
          </div>
-         <DonationModal open={donationOpen} onClose={() => setDonationOpen(false)} />
+         {donationOpen ? (
+            <Suspense fallback={null}>
+               <LazyDonationModal open={donationOpen} onClose={closeDonationModal} />
+            </Suspense>
+         ) : null}
       </header>
    );
 }

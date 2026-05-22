@@ -16,6 +16,20 @@ function FlagBr() {
    );
 }
 
+function FlagEs() {
+   return (
+      <svg
+         viewBox="0 0 30 20"
+         className="pointer-events-none h-[18px] w-[27px] overflow-hidden rounded-[3px] shadow-sm cursor-pointer"
+         aria-hidden
+      >
+         <rect width="30" height="7" y="0" fill="#aa151b" />
+         <rect width="30" height="6" y="7" fill="#f1bf00" />
+         <rect width="30" height="7" y="13" fill="#aa151b" />
+      </svg>
+   );
+}
+
 function FlagUs() {
    return (
       <svg
@@ -64,9 +78,19 @@ function FlagUs() {
    );
 }
 
+function resolvePortalLocale(language: string | undefined): 'pt' | 'en' | 'es' {
+   if (language?.startsWith('es')) {
+      return 'es';
+   }
+   if (language?.startsWith('en')) {
+      return 'en';
+   }
+   return 'pt';
+}
+
 export function LanguageSwitcher() {
    const { i18n, t } = useTranslation('common');
-   const lng = i18n.resolvedLanguage?.startsWith('en') ? 'en' : 'pt';
+   const lng = resolvePortalLocale(i18n.resolvedLanguage ?? i18n.language);
 
    const btnClass = (active: boolean) =>
       clsx(
@@ -77,7 +101,7 @@ export function LanguageSwitcher() {
       );
 
    return (
-      <div className="flex shrink-0 items-center gap-4 px-2 rounded-lg border border-border/80 bg-card/50 p-0.5">
+      <div className="flex shrink-0 items-center gap-2 px-2 rounded-lg border border-border/80 bg-card/50 p-0.5 sm:gap-3">
          <button
             type="button"
             className={btnClass(lng === 'pt')}
@@ -95,6 +119,15 @@ export function LanguageSwitcher() {
             onClick={() => void i18n.changeLanguage('en')}
          >
             <FlagUs />
+         </button>
+         <button
+            type="button"
+            className={btnClass(lng === 'es')}
+            aria-pressed={lng === 'es'}
+            aria-label={t('language.switchToEs')}
+            onClick={() => void i18n.changeLanguage('es')}
+         >
+            <FlagEs />
          </button>
       </div>
    );

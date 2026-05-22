@@ -10,7 +10,8 @@
    },
    "language": {
       "switchToPt": "Mudar idioma para português",
-      "switchToEn": "Mudar idioma para inglês"
+      "switchToEn": "Mudar idioma para inglês",
+      "switchToEs": "Mudar idioma para espanhol"
    },
    "meta": {
       "appTitle": "Rick & Morty Portal"
@@ -189,6 +190,7 @@
       "disclaimerTitle": "Doação opcional",
       "disclaimerBody": "Este portal é um projeto educacional para praticar React, TypeScript e Web3. Não há obrigação de doar — qualquer apoio ajuda a manter o experimento no ar.",
       "crypto": {
+         "panelLoading": "Carregando painel crypto...",
          "network": "Rede: Polygon (MATIC)",
          "connectWallet": "Conectar carteira",
          "connecting": "Conectando...",

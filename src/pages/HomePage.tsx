@@ -3,9 +3,9 @@ import { motion } from 'framer-motion';
 import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { CharacterCard } from '../components/CharacterCard';
-import { CharacterFiltersBar } from '../components/CharacterFiltersBar';
-import { HomeHero } from '../components/HomeHero';
+import { CharacterCard } from '../components/characters/CharacterCard';
+import { CharacterFiltersBar } from '../components/characters/CharacterFiltersBar';
+import { HomeHero } from '../components/characters/HomeHero';
 import { CharacterService, type CharacterListFilters } from '../services/characters';
 import type { Character, Info } from '../types/api';
 

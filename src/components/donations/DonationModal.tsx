@@ -1,13 +1,18 @@
 import clsx from 'clsx';
-import { useEffect, useId, useRef, useState } from 'react';
+import { Suspense, lazy, useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CryptoDonationPanel } from './CryptoDonationPanel';
 import { DonationDisclaimer } from './DonationDisclaimer';
 import { FiatDonationPanel } from './FiatDonationPanel';
 
 type DonationTab = 'crypto' | 'fiat';
 
-interface DonationModalProps {
+const LazyCryptoDonationPanel = lazy(() =>
+   import('./CryptoDonationPanel').then((module) => ({
+      default: module.CryptoDonationPanel,
+   })),
+);
+
+export interface DonationModalProps {
    open: boolean;
    onClose: () => void;
 }
@@ -38,6 +43,7 @@ export function DonationModal({ open, onClose }: DonationModalProps) {
          dialog.showModal();
       } else if (!open && dialog.open) {
          dialog.close();
+         setTab('crypto');
       }
    }, [open]);
 
@@ -103,7 +109,19 @@ export function DonationModal({ open, onClose }: DonationModalProps) {
             </div>
 
             <div role="tabpanel">
-               {tab === 'crypto' ? <CryptoDonationPanel /> : <FiatDonationPanel />}
+               {tab === 'crypto' ? (
+                  <Suspense
+                     fallback={
+                        <p className="text-sm font-semibold text-primary">
+                           {t('donations.crypto.panelLoading')}
+                        </p>
+                     }
+                  >
+                     <LazyCryptoDonationPanel />
+                  </Suspense>
+               ) : (
+                  <FiatDonationPanel />
+               )}
             </div>
          </div>
       </dialog>

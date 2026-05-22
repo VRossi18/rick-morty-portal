@@ -1,7 +1,7 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { canGoToNextSeason, canGoToPreviousSeason, stepSeason } from '../utils/episodeSeason';
+import { canGoToNextSeason, canGoToPreviousSeason, stepSeason } from '../../utils/episodeSeason';
 import { CharacterMultiSelect, type SelectedCharacter } from './CharacterMultiSelect';
 
 interface EpisodeFiltersBarProps {

@@ -1,21 +1,28 @@
 import clsx from 'clsx';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useConnection, useConnect, useDisconnect, useSwitchChain } from 'wagmi';
 import {
-   DONATION_CHAIN_ID,
    DONATION_PRESET_AMOUNTS_MATIC,
    getPolygonExplorerTxUrl,
    isDonationContractConfigured,
 } from '../../config/donations';
 import { useDonationContract } from '../../hooks/useDonationContract';
+import { useDonationWallet } from '../../hooks/useDonationWallet';
 
 export function CryptoDonationPanel() {
    const { t } = useTranslation('common');
-   const { address, isConnected, chainId } = useConnection();
-   const { connectors, connect, isPending: isConnecting, error: connectError } = useConnect();
-   const { disconnect } = useDisconnect();
-   const { switchChain, isPending: isSwitching } = useSwitchChain();
+   const {
+      shortAddress,
+      isConnected,
+      isWrongNetwork,
+      canConnect,
+      isConnecting,
+      connectError,
+      connectInjected,
+      disconnect,
+      isSwitching,
+      switchToPolygon,
+   } = useDonationWallet();
    const { donate, isPending, isConfirming, isConfirmed, hash, error, reset } =
       useDonationContract();
 
@@ -25,8 +32,6 @@ export function CryptoDonationPanel() {
    const [customAmount, setCustomAmount] = useState('');
    const [localError, setLocalError] = useState<string | null>(null);
 
-   const isWrongNetwork = isConnected && chainId !== DONATION_CHAIN_ID;
-
    const amountToSend = useMemo(() => {
       const custom = customAmount.trim();
       if (custom) {
@@ -34,15 +39,6 @@ export function CryptoDonationPanel() {
       }
       return selectedPreset;
    }, [customAmount, selectedPreset]);
-
-   const injectedConnector = connectors[0];
-
-   const handleConnect = useCallback(() => {
-      if (!injectedConnector) {
-         return;
-      }
-      connect({ connector: injectedConnector, chainId: DONATION_CHAIN_ID });
-   }, [connect, injectedConnector]);
 
    const handleDonate = useCallback(async () => {
       setLocalError(null);
@@ -84,8 +80,8 @@ export function CryptoDonationPanel() {
             <div className="space-y-3">
                <button
                   type="button"
-                  onClick={handleConnect}
-                  disabled={isConnecting || !injectedConnector}
+                  onClick={connectInjected}
+                  disabled={isConnecting || !canConnect}
                   className="w-full rounded-lg border border-primary/60 bg-primary/15 px-4 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary/25 disabled:opacity-50"
                >
                   {isConnecting
@@ -99,12 +95,10 @@ export function CryptoDonationPanel() {
          ) : (
             <div className="space-y-4">
                <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border/80 bg-card/40 px-3 py-2 text-sm">
-                  <span className="font-mono text-xs text-muted-foreground">
-                     {address?.slice(0, 6)}…{address?.slice(-4)}
-                  </span>
+                  <span className="font-mono text-xs text-muted-foreground">{shortAddress}</span>
                   <button
                      type="button"
-                     onClick={() => disconnect()}
+                     onClick={disconnect}
                      className="text-xs font-semibold text-primary hover:underline"
                   >
                      {t('donations.crypto.disconnect')}
@@ -116,7 +110,7 @@ export function CryptoDonationPanel() {
                      <p className="text-sm text-foreground">{t('donations.crypto.wrongNetwork')}</p>
                      <button
                         type="button"
-                        onClick={() => switchChain({ chainId: DONATION_CHAIN_ID })}
+                        onClick={switchToPolygon}
                         disabled={isSwitching}
                         className="rounded-lg border border-primary/50 px-3 py-1.5 text-sm font-semibold text-primary"
                      >

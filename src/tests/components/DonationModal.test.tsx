@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import i18n from '../../i18n';
 import { DonationModal } from '../../components/donations/DonationModal';
@@ -8,14 +8,16 @@ vi.mock('../../components/donations/CryptoDonationPanel', () => ({
 }));
 
 describe('DonationModal', () => {
-   it('renders disclaimer and tabs when open', () => {
+   it('renders disclaimer and tabs when open', async () => {
       render(<DonationModal open onClose={() => {}} />);
 
       expect(screen.getByText(i18n.t('donations.disclaimerTitle'))).toBeInTheDocument();
       expect(screen.getByText(i18n.t('donations.disclaimerBody'))).toBeInTheDocument();
       expect(screen.getByRole('tab', { name: i18n.t('donations.tabCrypto') })).toBeInTheDocument();
       expect(screen.getByRole('tab', { name: i18n.t('donations.tabFiat') })).toBeInTheDocument();
-      expect(screen.getByTestId('crypto-panel')).toBeInTheDocument();
+      await waitFor(() => {
+         expect(screen.getByTestId('crypto-panel')).toBeInTheDocument();
+      });
    });
 
    it('shows fiat placeholder when fiat tab is selected', () => {

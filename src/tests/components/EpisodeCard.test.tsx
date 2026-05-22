@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 import type { Episode } from '../../types/api';
 import i18n from '../../i18n';
-import { EpisodeCard } from '../../components/EpisodeCard';
+import { EpisodeCard } from '../../components/episodes/EpisodeCard';
 
 const episode: Episode = {
    id: 1,

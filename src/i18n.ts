@@ -1,16 +1,22 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import enCommon from './locales/en/common.json';
+import esCommon from './locales/es/common.json';
 import ptCommon from './locales/pt/common.json';
 
 export const LOCALE_STORAGE_KEY = 'portal.locale';
 
-function readStoredLocale(): 'en' | 'pt' {
+export type PortalLocale = 'pt' | 'en' | 'es';
+
+function readStoredLocale(): PortalLocale {
    if (typeof window === 'undefined') {
       return 'pt';
    }
    const v = window.localStorage.getItem(LOCALE_STORAGE_KEY);
-   return v === 'en' ? 'en' : 'pt';
+   if (v === 'en' || v === 'es') {
+      return v;
+   }
+   return 'pt';
 }
 
 function syncDocument(lang: string) {
@@ -25,6 +31,7 @@ function syncDocument(lang: string) {
 void i18n.use(initReactI18next).init({
    resources: {
       en: { common: enCommon },
+      es: { common: esCommon },
       pt: { common: ptCommon },
    },
    lng: readStoredLocale(),

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { SPECIES_FILTER_OPTIONS, TYPE_FILTER_OPTIONS } from '../data/characterFilterOptions';
+import { SPECIES_FILTER_OPTIONS, TYPE_FILTER_OPTIONS } from '../../data/characterFilterOptions';
 
 interface CharacterFiltersBarProps {
    nameDraft: string;

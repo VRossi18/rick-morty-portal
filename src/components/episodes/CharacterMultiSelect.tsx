@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 import { startTransition, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CharacterService } from '../services/characters';
-import type { Character } from '../types/api';
+import { CharacterService } from '../../services/characters';
+import type { Character } from '../../types/api';
 
 export type SelectedCharacter = {
    id: number;

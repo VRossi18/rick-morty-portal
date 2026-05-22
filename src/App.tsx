@@ -1,8 +1,8 @@
 import { AnimatePresence } from 'framer-motion';
 import { Suspense } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import { AppShell } from './components/AppShell';
-import { RouteFallback } from './components/RouteFallback';
+import { AppShell } from './components/layout/AppShell';
+import { RouteFallback } from './components/layout/RouteFallback';
 import { lazyPage } from './utils/lazyPage';
 
 const HomePage = lazyPage(() => import('./pages/HomePage'), 'HomePage');

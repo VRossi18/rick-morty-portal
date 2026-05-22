@@ -1,0 +1,566 @@
+{
+   "nav": {
+      "ariaMain": "Principal",
+      "about": "Sobre mí",
+      "characters": "Personajes",
+      "episodes": "Episodios",
+      "locations": "Ubicaciones",
+      "rpg": "Rick and Morty RPG",
+      "support": "Apoyar"
+   },
+   "language": {
+      "switchToPt": "Cambiar idioma a portugués",
+      "switchToEn": "Cambiar idioma a inglés",
+      "switchToEs": "Cambiar idioma a español"
+   },
+   "meta": {
+      "appTitle": "Rick & Morty Portal"
+   },
+   "notFound": {
+      "title": "404 — Rick & Morty Portal",
+      "sectionAria": "Página no encontrada",
+      "message": "La página que buscas fue movida a otro universo.",
+      "home": "Llévame a casa"
+   },
+   "home": {
+      "hero": {
+         "title": "RICK AND",
+         "titleAccent": "MORTY",
+         "subtitle": "EXPLORANDO EL MULTIVERSO DE RICK AND MORTY"
+      },
+      "loading": "CARGANDO DIMENSIÓN...",
+      "errorLoad": "No se pudieron cargar los personajes de esta página.",
+      "empty": {
+         "title": "No se encontraron personajes con estos filtros.",
+         "hint": "Ajusta el nombre o los filtros e inténtalo de nuevo — la API oficial de la serie no devolvió resultados para esta combinación."
+      },
+      "pagination": {
+         "prev": "Anterior",
+         "next": "Siguiente",
+         "pageOf": "Página {{current}} de {{total}}"
+      }
+   },
+   "episodes": {
+      "hero": {
+         "title": "EPISODIOS",
+         "titleAccent": "RICK & MORTY",
+         "subtitle": "TEMPORADAS Y AVENTURAS EN EL MULTIVERSO"
+      },
+      "loading": "CARGANDO EPISODIOS...",
+      "errorLoad": "No se pudieron cargar los episodios de esta página.",
+      "empty": {
+         "title": "No se encontraron episodios con estos filtros.",
+         "hint": "Ajusta el nombre o los personajes seleccionados e inténtalo de nuevo — con varios personajes seleccionados, el episodio debe incluir a todos."
+      },
+      "pagination": {
+         "prev": "Anterior",
+         "next": "Siguiente",
+         "pageOf": "Página {{current}} de {{total}}",
+         "pageOfSeason": "Temporada {{season}} · Página {{current}} de {{total}}"
+      },
+      "filters": {
+         "seasonLabel": "Temporada",
+         "seasonCurrent": "Temporada {{season}}",
+         "seasonPrev": "Temporada anterior",
+         "seasonNext": "Temporada siguiente",
+         "searchLabel": "Buscar episodio por nombre",
+         "searchPlaceholder": "Buscar por nombre (ej. Pilot, Ricklantis)...",
+         "charactersLabel": "Personajes en el episodio",
+         "charactersPlaceholder": "Seleccionar personajes...",
+         "charactersSelected": "{{count}} personaje(s) seleccionado(s)",
+         "characterSearchPlaceholder": "Buscar personaje para filtrar...",
+         "characterSearchLoading": "Buscando personajes...",
+         "characterSearchEmpty": "No se encontraron personajes.",
+         "removeCharacter": "Quitar {{name}} del filtro",
+         "clear": "Limpiar filtros"
+      },
+      "card": {
+         "ariaViewDetails": "Ver detalles del episodio {{name}}",
+         "airDate": "Emitido:",
+         "characterCount_one": "{{count}} personaje",
+         "characterCount_other": "{{count}} personajes"
+      }
+   },
+   "locations": {
+      "hero": {
+         "title": "UBICACIONES",
+         "titleAccent": "RICK & MORTY",
+         "subtitle": "PLANETAS, DIMENSIONES Y LUGARES EN EL MULTIVERSO"
+      },
+      "loading": "CARGANDO UBICACIONES...",
+      "errorLoad": "No se pudieron cargar las ubicaciones de esta página.",
+      "empty": {
+         "title": "No se encontraron ubicaciones con estos filtros.",
+         "hint": "Ajusta el nombre, el tipo o la dimensión e inténtalo de nuevo — la API oficial no devolvió resultados para esta combinación."
+      },
+      "pagination": {
+         "prev": "Anterior",
+         "next": "Siguiente",
+         "pageOf": "Página {{current}} de {{total}}"
+      },
+      "filters": {
+         "searchLabel": "Buscar ubicación por nombre",
+         "searchPlaceholder": "Buscar por nombre (ej. Earth, Citadel)...",
+         "typeLabel": "Tipo",
+         "typeAll": "Tipo (todos)",
+         "dimensionLabel": "Dimensión",
+         "dimensionAll": "Dimensión (todas)",
+         "clear": "Limpiar filtros"
+      },
+      "card": {
+         "ariaViewDetails": "Ver detalles de la ubicación {{name}}",
+         "dimension": "Dimensión:",
+         "typeUnknown": "Desconocido",
+         "residentCount_one": "{{count}} residente",
+         "residentCount_other": "{{count}} residentes"
+      }
+   },
+   "locationDetail": {
+      "back": "Volver a ubicaciones",
+      "loading": "ABRIENDO DIMENSIÓN...",
+      "errorInvalidId": "ID inválido.",
+      "errorNotFound": "Ubicación no encontrada.",
+      "errorLoadFailed": "No se pudo cargar esta ubicación.",
+      "typeUnknown": "Desconocido",
+      "fieldDimension": "Dimensión",
+      "fieldResidents": "Residentes",
+      "fieldCreated": "Creado",
+      "residentsHeading": "Residentes en este lugar",
+      "residentsLoading": "Cargando residentes...",
+      "residentsEmpty": "No hay residentes listados para esta ubicación.",
+      "episodesHeading": "Episodios relacionados",
+      "episodesNote": "Lista episodios en los que aparecen residentes de este lugar — la API no vincula ubicaciones con episodios directamente.",
+      "episodesLoading": "Cargando episodios relacionados...",
+      "episodesEmpty": "No se encontraron episodios para los residentes de esta ubicación."
+   },
+   "episodeDetail": {
+      "back": "Volver a episodios",
+      "loading": "ABRIENDO DIMENSIÓN...",
+      "errorInvalidId": "ID inválido.",
+      "errorNotFound": "Episodio no encontrado.",
+      "errorLoadFailed": "No se pudo cargar este episodio.",
+      "fieldAirDate": "Fecha de emisión",
+      "fieldCreated": "Creado",
+      "charactersHeading": "Personajes en este episodio",
+      "charactersEmpty": "No hay personajes listados para este episodio."
+   },
+   "filters": {
+      "searchLabel": "Buscar personaje por nombre",
+      "searchPlaceholder": "Buscar por nombre (ej. Rick, Morty)...",
+      "statusLabel": "Estado",
+      "statusAll": "Estado (todos)",
+      "genderLabel": "Género",
+      "genderAll": "Género (todos)",
+      "clear": "Limpiar filtros",
+      "species": "Especie",
+      "speciesAll": "Especie (todas)",
+      "type": "Tipo",
+      "typeAll": "Tipo (todos)"
+   },
+   "characterDetail": {
+      "back": "Volver al portal",
+      "loading": "ABRIENDO DIMENSIÓN...",
+      "errorInvalidId": "ID inválido.",
+      "errorNotFound": "Personaje no encontrado.",
+      "errorLoadFailed": "No se pudo cargar este personaje.",
+      "fieldType": "Tipo",
+      "fieldGender": "Género",
+      "fieldOrigin": "Origen",
+      "fieldLocation": "Ubicación actual",
+      "fieldCreated": "Creado",
+      "episodesHeading": "Episodios",
+      "episodesLoading": "Cargando episodios...",
+      "episodesEmpty": "No hay episodios listados para este personaje.",
+      "episodeCount_one": "({{count}} episodio)",
+      "episodeCount_other": "({{count}} episodios)"
+   },
+   "card": {
+      "ariaViewDetails": "Ver detalles de {{name}}",
+      "origin": "Origen:",
+      "location": "Ubicación:"
+   },
+   "theme": {
+      "toggle": "Cambiar tema"
+   },
+   "donations": {
+      "modalTitle": "Apoyar el proyecto",
+      "close": "Cerrar",
+      "tabCrypto": "Crypto",
+      "tabFiat": "PIX / Stripe",
+      "disclaimerTitle": "Donación opcional",
+      "disclaimerBody": "Este portal es un proyecto educativo para practicar React, TypeScript y Web3. No estás obligado a donar — cualquier apoyo ayuda a mantener el experimento en marcha.",
+      "crypto": {
+         "panelLoading": "Cargando panel crypto...",
+         "network": "Red: Polygon (MATIC)",
+         "connectWallet": "Conectar billetera",
+         "connecting": "Conectando...",
+         "disconnect": "Desconectar",
+         "wrongNetwork": "Tu billetera no está en Polygon. Cambia de red para continuar.",
+         "switchNetwork": "Cambiar a Polygon",
+         "switching": "Cambiando red...",
+         "amountLabel": "Monto en MATIC",
+         "customPlaceholder": "Otro monto (ej. 0.25)",
+         "donate": "Donar vía contrato",
+         "pending": "Esperando confirmación...",
+         "success": "¡Donación enviada!",
+         "explorerLink": "Ver en Polygonscan",
+         "contractNotConfigured": "Contrato de donación no configurado. Define VITE_DONATION_CONTRACT_ADDRESS en el entorno.",
+         "invalidAmount": "Ingresa un monto mayor que cero.",
+         "errorGeneric": "No se pudo completar la transacción. Inténtalo de nuevo."
+      },
+      "fiat": {
+         "comingSoon": "Próximamente",
+         "pixNote": "Las donaciones vía PIX con Stripe se habilitarán en una próxima versión.",
+         "stripeNote": "Los pagos internacionales con tarjeta también están planificados.",
+         "pixButton": "Donar con PIX (próximamente)"
+      }
+   },
+   "about": {
+      "sectionAria": "Sobre mí",
+      "portraitAlt": "Retrato de Vinicius Rossi",
+      "location": "Brasil",
+      "contactHeading": "Contacto y redes",
+      "skillsBody": "Soy desarrollador de software con más de nueve años de experiencia construyendo y evolucionando sistemas de alto rendimiento en fintech, SaaS, juegos y seguros de salud. Trabajo con JavaScript, TypeScript, Node.js, React, C# y .NET, microservicios e integraciones orientadas a eventos (por ejemplo RabbitMQ), además de código limpio, SOLID y pipelines de CI/CD (GitHub Actions, Jenkins). Tengo amplia experiencia en nube AWS, contenedores con Docker y Podman, seguridad con OAuth2 y JWT, observabilidad con Datadog y desarrollo de juegos con Unity y Godot. Valoro la mentoría de equipos, el diseño de arquitecturas escalables y la colaboración ágil en equipos remotos."
+   },
+   "social": {
+      "email": "Email",
+      "whatsapp": "WhatsApp",
+      "instagram": "Instagram",
+      "linkedin": "LinkedIn",
+      "x": "X",
+      "github": "GitHub"
+   },
+   "rpg": {
+      "title": "Creación de personaje",
+      "subtitle": "Gasta 27 puntos (costo 1:1). Puntuación antes de modificadores raciales: 8–15. Total = hoja + bonificación racial + desventaja.",
+      "poolSummary": "{{spent}} / 27 puntos gastados — {{remaining}} restantes",
+      "raceHeading": "Raza",
+      "characterHeading": "Personaje",
+      "characterNameLabel": "Nombre del personaje",
+      "characterNamePlaceholder": "ej. Blorko Smith",
+      "characterNameHint": "Se muestra en la vista previa de la hoja y se incluye en la exportación JSON.",
+      "selectedRacePreview": "Raza seleccionada",
+      "abilitiesHeading": "Atributos",
+      "sheetBase": "Base",
+      "sheetInvested": "Sobre 8",
+      "sheetRacial": "Racial",
+      "sheetDrawback": "Desventaja",
+      "sheetTotal": "Total",
+      "suggestedSkill": "Habilidad",
+      "highTotalHint": "Total por encima de 17 (solo resaltado visual)",
+      "increment": "Aumentar",
+      "decrement": "Disminuir",
+      "raceSelectAria": "Seleccionar raza {{race}}",
+      "humanBonusHeading": "Bonificaciones raciales humanas (+1 cada una)",
+      "humanBonusSlot1": "Primer atributo +1",
+      "humanBonusSlot2": "Segundo atributo +1",
+      "raceSecondarySkill": "Segunda habilidad racial",
+      "raceDrawback": "Desventaja",
+      "raceDrawbackMechanical": "Penalizaciones de atributos (hoja)",
+      "raceDrawbackNone": "Ninguna para esta raza.",
+      "raceDrawbackFlavor": "Notas",
+      "exportJson": "Exportar JSON",
+      "exportJsonAria": "Descargar la hoja de personaje en JSON para una sesión con LLM o respaldo",
+      "createCharacter": "Crear personaje",
+      "createCharacterAria": "Abrir confirmación para finalizar tu personaje y ver la hoja completa",
+      "createBlockedHint": "Gasta los 27 puntos e ingresa un nombre antes de crear.",
+      "createBlockedAria": "Crear personaje (deshabilitado hasta completar la hoja)",
+      "createConfirmTitle": "¿Crear este personaje?",
+      "createConfirmDescription": "Vas a fijar esta build: raza, nombre, compra de puntos y todos los valores derivados de combate/social. Aún puedes exportar JSON después desde el resumen.",
+      "createConfirmBack": "Volver",
+      "createConfirmYes": "Sí, crear",
+      "createdTitle": "Personaje listo",
+      "createdSubtitle": "Aquí está tu hoja completa: estadísticas, valores derivados y habilidades raciales.",
+      "createdClose": "Cerrar",
+      "createdExportJson": "Exportar JSON",
+      "createdExportJsonAria": "Descargar este personaje como JSON",
+      "createdStartGame": "Iniciar partida",
+      "createdStartGameHint": "Próximamente — este botón es un marcador de posición por ahora.",
+      "exportBlockedHint": "Gasta los 27 puntos antes de poder exportar.",
+      "exportBlockedAria": "Exportar JSON (deshabilitado hasta gastar todos los puntos)",
+      "exportBlockedNameHint": "Ingresa un nombre de personaje antes de poder exportar.",
+      "exportBlockedNameAria": "Exportar JSON (deshabilitado hasta ingresar un nombre)",
+      "exportConfirmTitle": "¿Exportar hoja de personaje?",
+      "exportConfirmDescription": "Se descargará un archivo JSON con el nombre, la raza, los atributos y los totales del pool — listo para pegar en una sesión con LLM.",
+      "exportConfirmCancel": "Cancelar",
+      "exportConfirmDownload": "Descargar JSON",
+      "llmInstructions": "Trata este JSON como la hoja de personaje actual estilo Rick and Morty del jugador (meta.schemaVersion 3). Usa character.name al dirigirte al jugador. Usa abilities[].total y abilities[].d20Modifier (floor((total-10)/2)) para las pruebas salvo que tu mesa difiera. Usa derived para combate/social: hitPointsMax, physicalAttackRating (canal STR), magicalAttackRating (canal INT), socialInfluencePool (CHA, fuera de combate), extraStrikesBeforeEnemy / dexSpeedTier (cadencia de iniciativa DEX), stealthRating (DEX + stealthRacialBonus para movimiento sigiloso), stealthRacialBonus (0 o +2). Usa race.skills (dos ataques, apoyo, objeto con outOfCombat) para acciones por raza. Para humanos, human.playstyle describe flexibilidad genérica de objetos/builds. rules.derivedFormulas explica las fórmulas. Respeta race.drawbackModifiers y pointPool.",
+      "derivedFormulas": {
+         "hitPoints": "hitPointsMax = 10 + total de Constitución (vitalidad / pool de PV).",
+         "physicalAttack": "physicalAttackRating = total de Fuerza (canal de daño físico).",
+         "magicalAttack": "magicalAttackRating = total de Inteligencia (canal de daño mágico).",
+         "socialPool": "socialInfluencePool = total de Carisma (conversación e influencia fuera de combate).",
+         "dexSpeed": "extraStrikesBeforeEnemy según total de Destreza: 0 si DEX < 14, 1 para 14–15, 2 para 16–17, 3 si DEX ≥ 18 (ataques extra del jugador antes del primer golpe típico del enemigo).",
+         "stealth": "stealthRating = total de Destreza + stealthRacialBonus (0, o +2 para Bird-Person y Parásitos — moverse sin ser visto, infiltración, seguimiento)."
+      },
+      "human": {
+         "playstyleTitle": "Línea base versátil",
+         "playstyleSummary": "Los humanos pueden usar cualquier categoría de objeto que permita tu mesa y apoyan muchas builds (marcial, caster, cara, skirmisher). Sus +1 raciales son flexibles — reimagina equipo y proezas libremente."
+      },
+      "cheatSheet": {
+         "title": "Hoja de referencia de combate y social",
+         "description": "Cómo tus totales finales de atributos se traducen en PV, canales de daño, pool social, sigilo (moverse sin ser visto) y cadencia de ataque DEX. Los valores se actualizan al cambiar puntuaciones o raza.",
+         "hitPointsLabel": "PV máx.",
+         "hitPointsHelp": "Total de Constitución más 10 — resistencia y aguante.",
+         "physicalLabel": "Ataque físico (STR)",
+         "physicalHelp": "Usa tu total de Fuerza como rating de daño físico.",
+         "magicalLabel": "Ataque mágico (INT)",
+         "magicalHelp": "Usa tu total de Inteligencia como rating de daño mágico.",
+         "socialLabel": "Pool social (CHA)",
+         "socialHelp": "Usa tu total de Carisma para persuasión, tratos y palanca fuera de combate.",
+         "dexSpeedLabel": "Golpes extra (DEX)",
+         "dexSpeedHelp": "Destreza alta permite resolver ataques extra antes de que un enemigo típico actúe una vez. Escalas en totales DEX 14, 16 y 18.",
+         "raceSkillsTitle": "Set de habilidades raciales",
+         "attackSlot1": "Ataque 1",
+         "attackSlot2": "Ataque 2",
+         "attacksHeading": "Habilidades de ataque",
+         "supportHeading": "Apoyo",
+         "itemHeading": "Objeto / movimiento signature",
+         "outOfCombat": "Fuera de combate",
+         "raceCardSkills": "Habilidades signature",
+         "dexTierLabel": "Nivel de velocidad DEX",
+         "formulasToggle": "Mostrar texto de fórmulas (para jugadores y LLMs)",
+         "stealthLabel": "Sigilo (DEX)",
+         "stealthHelp": "Qué tan difícil es detectarte al escabullirte, seguir a alguien o evitar guardias — tu total de Destreza es la base, con un pequeño don racial en algunas especies.",
+         "stealthAffinity": "+{{bonus}} don racial (Bird-Person / Parásitos)",
+         "stealthStatusTitle": "De dónde sale el número de sigilo",
+         "stealthDexLine": "Base de tu total de Destreza (tras bonos raciales y desventajas en la hoja): {{dex}}.",
+         "stealthRacialLine": "Don racial para pasar desapercibido: +{{bonus}} (Bird-Person y Parásitos +2; el resto +0).",
+         "stealthRatingLine": "Rating de sigilo al resolver esconderse o moverse en silencio: {{rating}} (= total DEX + don racial)."
+      },
+      "abilities": {
+         "str": "Fuerza",
+         "dex": "Destreza",
+         "con": "Constitución",
+         "int": "Inteligencia",
+         "cha": "Carisma"
+      },
+      "races": {
+         "ciancans": {
+            "name": "Ciancanos",
+            "imageAlt": "Retrato del Príncipe Nebulon (Zigerion) de la serie, referencia visual para Ciancanos.",
+            "visualDescription": "Alienígenas estafadores de mente colmena, piel verde, ojos rojos y aletas — energía de hustle tecnológico.",
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Puñetazo Hive-Link",
+                  "summary": "Coordina un golpe brutal por la malla colmena; apoya en lecturas de Inteligencia del campo."
+               },
+               "attack2": {
+                  "name": "Pico de simulación",
+                  "summary": "Superpone una ráfaga AR hostil que tambalea a quienes compran la telemetría falsa."
+               },
+               "support": {
+                  "name": "Estafa de consuelo",
+                  "summary": "Hustle de equipo: desviar culpa, ganar segundos o falsear intención mientras los aliados se reposicionan."
+               },
+               "item": {
+                  "name": "Suite holo de bolsillo",
+                  "summary": "Despliega un proyector de estafa palmar para distracción en combate.",
+                  "outOfCombat": "Falsificar credenciales, previsualizar un recinto o vender un trato 'por tiempo limitado' a NPCs sin iniciativa."
+               }
+            }
+         },
+         "cronenbergs": {
+            "name": "Cronenbergs",
+            "imageAlt": "Retrato de Cronenberg Rick de la serie, referencia visual para Cronenbergs.",
+            "visualDescription": "Cuerpos mutados y tejido orgánico expuesto en tonos rojos y carnosos.",
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Embestida de espolón óseo",
+                  "summary": "Carga desordenada basada en Fuerza que deja salpicadura de icor como cobertura."
+               },
+               "attack2": {
+                  "name": "Golpe Cronenberg",
+                  "summary": "Onda de choque en el suelo; buena para amontonar enemigos."
+               },
+               "support": {
+                  "name": "Presencia de horror",
+                  "summary": "Intimidar y frenar: los rivales dudan, dando tempo a los aliados."
+               },
+               "item": {
+                  "name": "Fauces mutágenas",
+                  "summary": "Se aferra a un enemigo para morder armadura o extremidades mecánicas.",
+                  "outOfCombat": "Masticar escombros, puertas selladas o cables — asqueroso pero demolición rápida fuera de combate."
+               }
+            }
+         },
+         "birdPeople": {
+            "name": "Bird-Person",
+            "imageAlt": "Retrato de Birdperson de la serie, referencia visual para Bird-Person.",
+            "visualDescription": "Humanoides aviares con plumas, picos y silueta ágil.",
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Ráfaga de garras",
+                  "summary": "Dos golpes rápidos de Destreza para sangrar o romper guardia."
+               },
+               "attack2": {
+                  "name": "Pico en picado",
+                  "summary": "Caída desde arriba con daño perforante y retroceso."
+               },
+               "support": {
+                  "name": "Corriente térmica",
+                  "summary": "Surfea térmicas para reposicionar un aliado o limpiar casillas de peligro."
+               },
+               "item": {
+                  "name": "Glaive de alas",
+                  "summary": "Arma de alcance para pasadas aéreas giratorias.",
+                  "outOfCombat": "Vuelo de reconocimiento: asomarse por muros, explorar caminos o llegar a cornisas inaccesibles."
+               }
+            }
+         },
+         "chuds": {
+            "name": "Chuds",
+            "imageAlt": "Retrato del CHUD King de la serie, referencia visual para Chuds.",
+            "visualDescription": "Humanoides equinos subterráneos — duros y ligados al inframundo.",
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Embestida de casco en túnel",
+                  "summary": "Estampida impulsada por Constitución que ignora dolor menor."
+               },
+               "attack2": {
+                  "name": "Puñetazo real",
+                  "summary": "Golpe de control de masas para tambalear habitantes de la superficie."
+               },
+               "support": {
+                  "name": "Arenga del Underking",
+                  "summary": "Gritos de mando que dan aguante temporal a aliados en un punto choke."
+               },
+               "item": {
+                  "name": "Pico de guerra CHUD",
+                  "summary": "Perfora blindaje de piedra o cascos de vehículos en melee.",
+                  "outOfCombat": "Excavar atajos, forzar puertas o tallar agarres en roca de túnel."
+               }
+            }
+         },
+         "cromulons": {
+            "name": "Cromulons",
+            "imageAlt": "Retrato de Armagheadon (Cromulon) de la serie, referencia visual para Cromulons.",
+            "visualDescription": "Cabezas planetarias gigantes con presencia performativa fuerte.",
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Rayo Headliner",
+                  "summary": "Explosión sónica cargada de Carisma — el daño escala con el volumen del público."
+               },
+               "attack2": {
+                  "name": "Caída del juicio",
+                  "summary": "Peso psíquico que fija un objetivo para el remate de un aliado."
+               },
+               "support": {
+                  "name": "Escudo de aplausos",
+                  "summary": "Convierte elogios en barrera breve; ideal para proteger compañeros frágiles."
+               },
+               "item": {
+                  "name": "Micrófono orbital",
+                  "summary": "Canaliza energía escénica en arcos melee o proyectiles de 'nota'.",
+                  "outOfCombat": "Organizar concursos improvisados para influir multitudes, frenar guardias o ganar paso seguro con espectáculo."
+               }
+            }
+         },
+         "parasites": {
+            "name": "Parásitos",
+            "imageAlt": "Retrato de Pencilvester (parásito) de la serie, referencia visual para Parásitos.",
+            "visualDescription": "Formas que parecen amigos hasta que se revela la amenaza real.",
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Puñalada de falso amigo",
+                  "summary": "Explota la confianza para una puñalada súbita de Destreza desde una forma inofensiva."
+               },
+               "attack2": {
+                  "name": "Látigo de memoria",
+                  "summary": "Ataque de Inteligencia que desordena lo que el rival cree haber visto la ronda anterior."
+               },
+               "support": {
+                  "name": "Coro parásito",
+                  "summary": "Genera señuelos que absorben golpes o confunden targeting."
+               },
+               "item": {
+                  "name": "Brote parásito de bolsillo",
+                  "summary": "Desprende un mini mímico para hostigar flancos.",
+                  "outOfCombat": "Hacerse pasar por objetos mundanos o NPCs 'útiles' para explorar casas, oficinas o naves sin sospecha."
+               }
+            }
+         },
+         "gearPeople": {
+            "name": "Gear People",
+            "imageAlt": "Retrato de Anchor Gear (Gear-Person de Gear World) de la serie, referencia visual para Gear People.",
+            "visualDescription": "Seres mecánicos con engranajes expuestos y tonos bronce / metálicos.",
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Uppercut Geargrind",
+                  "summary": "Engranajes giratorios añaden daño de desgarro tras una lectura de Inteligencia de puntos débiles."
+               },
+               "attack2": {
+                  "name": "Barrido Clockwork",
+                  "summary": "Arco amplio que atasca armas enemigas o afloja tornillos de armadura."
+               },
+               "support": {
+                  "name": "Desmontaje de campo",
+                  "summary": "Mantenimiento rápido: estabilizar bot aliado, arma o subsistema de vehículo."
+               },
+               "item": {
+                  "name": "Kit Gear Wars",
+                  "summary": "Llaves modulares y calibradores de torque para reparaciones en batalla.",
+                  "outOfCombat": "Decodificar cerraduras antiguas de Gear World, afinar acoples de hiperdrive o improvisar trampas con chatarra."
+               }
+            }
+         },
+         "gromflomites": {
+            "name": "Gromflomitas",
+            "imageAlt": "Retrato de Cornvelious Daniel (Gromflomite) de la serie, visual distinto de la raza Ciancanos.",
+            "visualDescription": "Insectoides de varios ojos, usualmente con uniforme azul de la Federación Galáctica.",
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Ráfaga de carabina de plasma",
+                  "summary": "Ráfaga disciplinada de tres disparos premiada al anunciar tiros con Inteligencia."
+               },
+               "attack2": {
+                  "name": "Línea de disturbio con porra",
+                  "summary": "Supresión a corta distancia para bloquear pasillos."
+               },
+               "support": {
+                  "name": "Dron de formación",
+                  "summary": "Despliega un dron Fed diminuto que marca objetivos y da telemetría al escuadrón."
+               },
+               "item": {
+                  "name": "Esposas de contención Fed",
+                  "summary": "Manillas de energía para fijar objetivos prioritarios en combate.",
+                  "outOfCombat": "Tramitar papeleo rápido, bluff de credenciales o acordonar escenas del crimen ante civiles."
+               }
+            }
+         },
+         "humans": {
+            "name": "Humanos",
+            "imageAlt": "Retrato de Morty Smith de la serie, referencia humana para personajes de la Tierra (C-137).",
+            "visualDescription": "Seres adaptables de la Dimensión C-137 (o no). Especialistas en sobrevivir trauma interdimensional.",
+            "drawbackDescription": "—",
+            "skills": {
+               "attack1": {
+                  "name": "Paliza improvisada",
+                  "summary": "Usa lo que haya cerca — silla, culata de pistola de portal, destornillador láser — como golpe flexible de Fuerza."
+               },
+               "attack2": {
+                  "name": "Disparo comodín",
+                  "summary": "Ataque a distancia desesperado reimaginable como tech o magia según tu build."
+               },
+               "support": {
+                  "name": "Suerte de protagonista",
+                  "summary": "Una vez por descanso largo, fuerza una nueva tirada en una prueba fallida para ti o un aliado visible."
+               },
+               "item": {
+                  "name": "Mochila omni-slot",
+                  "summary": "Los humanos pueden vincular cualquier objeto mundano o exótico que permita tu mesa sin bloqueos raciales de objeto.",
+                  "outOfCombat": "Cambia loadouts libremente: kits de escalada, traductores, maletines de disfraz — lo que pida la escena."
+               }
+            }
+         }
+      }
+   }
+}

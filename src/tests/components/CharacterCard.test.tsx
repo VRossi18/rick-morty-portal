@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 import type { Character } from '../../types/api';
 import i18n from '../../i18n';
-import { CharacterCard } from '../../components/CharacterCard';
+import { CharacterCard } from '../../components/characters/CharacterCard';
 
 const character: Character = {
    id: 1,

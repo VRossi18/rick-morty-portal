@@ -3,9 +3,9 @@ import { motion } from 'framer-motion';
 import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { LocationCard } from '../components/LocationCard';
-import { LocationFiltersBar } from '../components/LocationFiltersBar';
-import { LocationsHero } from '../components/LocationsHero';
+import { LocationCard } from '../components/locations/LocationCard';
+import { LocationFiltersBar } from '../components/locations/LocationFiltersBar';
+import { LocationsHero } from '../components/locations/LocationsHero';
 import { LocationService, type LocationListFilters } from '../services/locations';
 import type { Info, Location } from '../types/api';
 

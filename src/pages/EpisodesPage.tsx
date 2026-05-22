@@ -3,10 +3,10 @@ import { motion } from 'framer-motion';
 import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import type { SelectedCharacter } from '../components/CharacterMultiSelect';
-import { EpisodeCard } from '../components/EpisodeCard';
-import { EpisodeFiltersBar } from '../components/EpisodeFiltersBar';
-import { EpisodesHero } from '../components/EpisodesHero';
+import type { SelectedCharacter } from '../components/episodes/CharacterMultiSelect';
+import { EpisodeCard } from '../components/episodes/EpisodeCard';
+import { EpisodeFiltersBar } from '../components/episodes/EpisodeFiltersBar';
+import { EpisodesHero } from '../components/episodes/EpisodesHero';
 import { EpisodeService, type EpisodeListFilters } from '../services/episodes';
 import type { Episode, Info } from '../types/api';
 import {

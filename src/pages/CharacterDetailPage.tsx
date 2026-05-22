@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useParams } from 'react-router-dom';
-import { EpisodeDetailLink } from '../components/EpisodeDetailLink';
+import { EpisodeDetailLink } from '../components/shared/EpisodeDetailLink';
 import { CharacterService } from '../services/characters';
 import type { Character, Episode, ResourceBase } from '../types/api';
 import type { CharacterLocationState } from '../types/navigation';

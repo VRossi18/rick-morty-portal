@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
-import type { Episode } from '../types/api';
+import type { Episode } from '../../types/api';
 
 interface EpisodeDetailLinkProps {
    episode: Episode;

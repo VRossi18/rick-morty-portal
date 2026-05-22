@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import {
    LOCATION_DIMENSION_FILTER_OPTIONS,
    LOCATION_TYPE_FILTER_OPTIONS,
-} from '../data/locationFilterOptions';
+} from '../../data/locationFilterOptions';
 
 interface LocationFiltersBarProps {
    nameDraft: string;

@@ -3,17 +3,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import i18n from '../../i18n';
 import { CryptoDonationPanel } from '../../components/donations/CryptoDonationPanel';
 
-const mockUseConnection = vi.fn();
-const mockUseConnect = vi.fn();
-const mockUseDisconnect = vi.fn();
-const mockUseSwitchChain = vi.fn();
+const mockUseDonationWallet = vi.fn();
 const mockUseDonationContract = vi.fn();
 
-vi.mock('wagmi', () => ({
-   useConnection: () => mockUseConnection(),
-   useConnect: () => mockUseConnect(),
-   useDisconnect: () => mockUseDisconnect(),
-   useSwitchChain: () => mockUseSwitchChain(),
+vi.mock('../../hooks/useDonationWallet', () => ({
+   useDonationWallet: () => mockUseDonationWallet(),
 }));
 
 vi.mock('../../hooks/useDonationContract', () => ({
@@ -31,19 +25,18 @@ vi.mock('../../config/donations', async (importOriginal) => {
 
 describe('CryptoDonationPanel', () => {
    beforeEach(() => {
-      mockUseConnection.mockReturnValue({
-         address: undefined,
+      mockUseDonationWallet.mockReturnValue({
+         shortAddress: null,
          isConnected: false,
-         chainId: undefined,
+         isWrongNetwork: false,
+         canConnect: true,
+         isConnecting: false,
+         connectError: null,
+         connectInjected: vi.fn(),
+         disconnect: vi.fn(),
+         isSwitching: false,
+         switchToPolygon: vi.fn(),
       });
-      mockUseConnect.mockReturnValue({
-         connectors: [{ id: 'injected', name: 'Injected' }],
-         connect: vi.fn(),
-         isPending: false,
-         error: null,
-      });
-      mockUseDisconnect.mockReturnValue({ disconnect: vi.fn() });
-      mockUseSwitchChain.mockReturnValue({ switchChain: vi.fn(), isPending: false });
       mockUseDonationContract.mockReturnValue({
          donate: vi.fn(),
          isPending: false,

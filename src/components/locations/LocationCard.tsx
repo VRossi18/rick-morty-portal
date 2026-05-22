@@ -2,9 +2,9 @@ import { motion } from 'framer-motion';
 import { memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import type { Location } from '../types/api';
-import type { LocationLocationState } from '../types/navigation';
-import type { CardInteraction } from './CharacterCard';
+import type { Location } from '../../types/api';
+import type { LocationLocationState } from '../../types/navigation';
+import type { CardInteraction } from '../characters/CharacterCard';
 
 interface Props {
    location: Location;
