@@ -518,7 +518,7 @@ export function CharacterSheetContainer() {
                            <p className="text-base font-bold text-foreground">{name}</p>
                            <p className="text-xs text-muted-foreground">
                               <span className="font-semibold text-foreground/80">
-                                 {t('rpg.raceCardSkills')}:{' '}
+                                 {t('rpg.cheatSheet.raceCardSkills')}:{' '}
                               </span>
                               <span className="line-clamp-2">
                                  {a1} · {a2} · {su}
@@ -572,25 +572,42 @@ export function CharacterSheetContainer() {
                      <p className="font-semibold text-foreground/90">
                         {t('rpg.cheatSheet.raceSkillsTitle')}
                      </p>
-                     <ul className="list-inside list-disc space-y-1.5 text-xs leading-relaxed">
+                     <ul className="space-y-2 text-xs leading-relaxed">
                         <li>
                            <span className="font-semibold text-foreground/85">
-                              {t('rpg.cheatSheet.attacksHeading')}:{' '}
+                              {t('rpg.cheatSheet.attacksHeading')} 1:{' '}
                            </span>
-                           {raceSkillName(t, selectedRace.id, 'attack1')} —{' '}
-                           {raceSkillName(t, selectedRace.id, 'attack2')}
+                           <span className="font-semibold text-foreground/90">
+                              {raceSkillName(t, selectedRace.id, 'attack1')}
+                           </span>{' '}
+                           — {raceSkillSummary(t, selectedRace.id, 'attack1')}
+                        </li>
+                        <li>
+                           <span className="font-semibold text-foreground/85">
+                              {t('rpg.cheatSheet.attacksHeading')} 2:{' '}
+                           </span>
+                           <span className="font-semibold text-foreground/90">
+                              {raceSkillName(t, selectedRace.id, 'attack2')}
+                           </span>{' '}
+                           — {raceSkillSummary(t, selectedRace.id, 'attack2')}
                         </li>
                         <li>
                            <span className="font-semibold text-foreground/85">
                               {t('rpg.cheatSheet.supportHeading')}:{' '}
                            </span>
-                           {raceSkillName(t, selectedRace.id, 'support')}
+                           <span className="font-semibold text-foreground/90">
+                              {raceSkillName(t, selectedRace.id, 'support')}
+                           </span>{' '}
+                           — {raceSkillSummary(t, selectedRace.id, 'support')}
                         </li>
                         <li>
                            <span className="font-semibold text-foreground/85">
                               {t('rpg.cheatSheet.itemHeading')}:{' '}
                            </span>
-                           {raceSkillName(t, selectedRace.id, 'item')}
+                           <span className="font-semibold text-foreground/90">
+                              {raceSkillName(t, selectedRace.id, 'item')}
+                           </span>{' '}
+                           — {raceSkillSummary(t, selectedRace.id, 'item')}
                         </li>
                      </ul>
                   </div>
