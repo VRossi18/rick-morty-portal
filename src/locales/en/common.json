@@ -234,6 +234,22 @@
       "title": "Character creation",
       "subtitle": "Spend 27 points (1:1 cost). Score before racial modifiers: 8–15. Total = sheet score + racial bonus + drawback.",
       "poolSummary": "{{spent}} / 27 points spent — {{remaining}} left",
+      "presets": {
+         "title": "Base characters",
+         "apply": "Apply preset",
+         "rickOp": {
+            "name": "Rick (OP)",
+            "description": "Ridiculously overpowered within the current rules: maxed intelligence and a setup for easier stories (with Morty in the narrative chaos)."
+         },
+         "morty": {
+            "name": "Morty",
+            "description": "Beginner-friendly balanced build: good tempo, solid charisma, and room to learn without friction."
+         },
+         "evilMorty": {
+            "name": "Evil Morty",
+            "description": "Aggressive strategist: intelligence-forward with social pressure to control encounters."
+         }
+      },
       "raceHeading": "Race",
       "characterHeading": "Character",
       "characterNameLabel": "Character name",

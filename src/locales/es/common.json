@@ -234,6 +234,22 @@
       "title": "Creación de personaje",
       "subtitle": "Gasta 27 puntos (costo 1:1). Puntuación antes de modificadores raciales: 8–15. Total = hoja + bonificación racial + desventaja.",
       "poolSummary": "{{spent}} / 27 puntos gastados — {{remaining}} restantes",
+      "presets": {
+         "title": "Personajes base",
+         "apply": "Aplicar preset",
+         "rickOp": {
+            "name": "Rick (OP)",
+            "description": "Ridículamente roto dentro de las reglas actuales: inteligencia al máximo y setup para historias más fáciles (con Morty en el caos narrativo)."
+         },
+         "morty": {
+            "name": "Morty",
+            "description": "Build equilibrada para principiantes: buen ritmo, carisma sólido y margen para aprender sin trabarse."
+         },
+         "evilMorty": {
+            "name": "Evil Morty",
+            "description": "Estratega agresivo: foco en inteligencia y presión social para controlar los encuentros."
+         }
+      },
       "raceHeading": "Raza",
       "characterHeading": "Personaje",
       "characterNameLabel": "Nombre del personaje",

@@ -9,6 +9,7 @@ import {
    MIN_SCORE_BEFORE_RACE,
    POINT_POOL_MAX,
 } from './characterCreationMath';
+import type { CharacterPreset, CharacterPresetId } from './presets';
 import { defaultRaceId, drawbackModifierMap, getRaceById, mergeAbilityDeltas, racialBonusMap } from './races';
 import type { AbilityId, AbilityScores, RaceId } from './types';
 
@@ -26,6 +27,7 @@ export function useCharacterCreation() {
       'str',
       'dex',
    ]);
+   const [selectedPresetId, setSelectedPresetId] = useState<CharacterPresetId | null>(null);
 
    const selectedRace = useMemo(() => getRaceById(selectedRaceId), [selectedRaceId]);
 
@@ -55,6 +57,15 @@ export function useCharacterCreation() {
 
    const setRace = useCallback((id: RaceId) => {
       setSelectedRaceId(id);
+      setSelectedPresetId(null);
+   }, []);
+
+   const applyPreset = useCallback((preset: CharacterPreset) => {
+      setCharacterName(preset.characterName);
+      setSelectedRaceId(preset.raceId);
+      setScores({ ...preset.scores });
+      setHumanBonusChoices(preset.humanBonusChoices ?? ['str', 'dex']);
+      setSelectedPresetId(preset.id);
    }, []);
 
    const setHumanBonusSlot = useCallback((slot: 0 | 1, ability: AbilityId) => {
@@ -94,6 +105,7 @@ export function useCharacterCreation() {
    return {
       characterName,
       setCharacterName,
+      selectedPresetId,
       selectedRaceId,
       selectedRace,
       scores,
@@ -105,6 +117,7 @@ export function useCharacterCreation() {
       totals,
       highTotalFlags,
       setRace,
+      applyPreset,
       incrementAbility,
       decrementAbility,
       humanBonusChoices,

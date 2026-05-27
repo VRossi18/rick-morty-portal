@@ -1,9 +1,14 @@
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { POINT_POOL_MAX } from '../../../components/rpg/characterCreationMath';
+import { CHARACTER_PRESETS } from '../../../components/rpg/presets';
 import { useCharacterCreation } from '../../../components/rpg/useCharacterCreation';
 
 describe('useCharacterCreation', () => {
+   it('defines all presets as humans', () => {
+      expect(CHARACTER_PRESETS.every((preset) => preset.raceId === 'humans')).toBe(true);
+   });
+
    it('starts at base scores with first race and full pool', () => {
       const { result } = renderHook(() => useCharacterCreation());
       expect(result.current.spent).toBe(0);
@@ -127,5 +132,39 @@ describe('useCharacterCreation', () => {
          result.current.decrementAbility('con');
       });
       expect(result.current.scores.con).toBe(8);
+   });
+
+   it('applies selected preset with name, race, scores, and human bonuses', () => {
+      const { result } = renderHook(() => useCharacterCreation());
+      const mortyPreset = CHARACTER_PRESETS.find((preset) => preset.id === 'morty');
+      expect(mortyPreset).toBeDefined();
+
+      act(() => {
+         result.current.applyPreset(mortyPreset!);
+      });
+
+      expect(result.current.characterName).toBe('Morty Smith');
+      expect(result.current.selectedRaceId).toBe('humans');
+      expect(result.current.selectedPresetId).toBe('morty');
+      expect(result.current.scores).toEqual(mortyPreset!.scores);
+      expect(result.current.humanBonusChoices).toEqual(['dex', 'cha']);
+      expect(result.current.spent).toBe(POINT_POOL_MAX);
+      expect(result.current.remaining).toBe(0);
+   });
+
+   it('clears selected preset when race is changed manually', () => {
+      const { result } = renderHook(() => useCharacterCreation());
+      const rickPreset = CHARACTER_PRESETS.find((preset) => preset.id === 'rickOp');
+      expect(rickPreset).toBeDefined();
+
+      act(() => {
+         result.current.applyPreset(rickPreset!);
+      });
+      expect(result.current.selectedPresetId).toBe('rickOp');
+
+      act(() => {
+         result.current.setRace('humans');
+      });
+      expect(result.current.selectedPresetId).toBeNull();
    });
 });

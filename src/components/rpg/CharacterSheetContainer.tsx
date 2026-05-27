@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { buildCharacterSheetExport } from './buildCharacterSheetExport';
 import type { CharacterSheetExportTranslate } from './buildCharacterSheetExport';
 import { BASE_SCORE, MAX_SCORE_BEFORE_RACE } from './characterCreationMath';
+import { CHARACTER_PRESETS } from './presets';
 import { buildDerivedSheet } from './rpgDerivedSheet';
 import { RACES, getRaceById } from './races';
 import { useCharacterCreation } from './useCharacterCreation';
@@ -53,10 +54,12 @@ function RacePortrait({
    race,
    imageAlt,
    imgClassName,
+   portraitUrl,
 }: {
    race: RaceDefinition;
    imageAlt: string;
    imgClassName: string;
+   portraitUrl?: string;
 }) {
    const [imgFailed, setImgFailed] = useState(false);
 
@@ -68,7 +71,7 @@ function RacePortrait({
 
    return (
       <img
-         src={race.portraitUrl}
+         src={portraitUrl ?? race.portraitUrl}
          alt={imageAlt}
          className={imgClassName}
          loading="lazy"
@@ -130,6 +133,7 @@ export function CharacterSheetContainer() {
    const {
       characterName,
       setCharacterName,
+      selectedPresetId,
       selectedRaceId,
       selectedRace,
       scores,
@@ -140,6 +144,7 @@ export function CharacterSheetContainer() {
       totals,
       highTotalFlags,
       setRace,
+      applyPreset,
       incrementAbility,
       decrementAbility,
       humanBonusChoices,
@@ -171,6 +176,10 @@ export function CharacterSheetContainer() {
       .replace(/\s/g, '')
       .trim();
    const hasFlavorDrawback = previewDrawback.length > 0 && drawbackFlavorTrimmed.length > 0;
+   const selectedPreset = useMemo(
+      () => CHARACTER_PRESETS.find((preset) => preset.id === selectedPresetId) ?? null,
+      [selectedPresetId],
+   );
 
    const canExportJson = remaining === 0 && nameTrimmed.length > 0;
 
@@ -393,6 +402,31 @@ export function CharacterSheetContainer() {
          </header>
 
          <section
+            aria-labelledby="rpg-presets-heading"
+            className="rounded-2xl border border-border/80 bg-card/40 p-4 md:p-5"
+         >
+            <h2 id="rpg-presets-heading" className="text-lg font-bold text-foreground">
+               {t('rpg.presets.title')}
+            </h2>
+            <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-3">
+               {CHARACTER_PRESETS.map((preset) => (
+                  <button
+                     key={preset.id}
+                     type="button"
+                     onClick={() => applyPreset(preset)}
+                     className="rounded-xl border border-border/80 bg-background/50 p-3 text-left transition hover:border-primary/50 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400"
+                  >
+                     <p className="text-sm font-bold text-foreground">{t(preset.labelKey)}</p>
+                     <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                        {t(preset.descriptionKey)}
+                     </p>
+                     <p className="mt-2 text-xs font-semibold text-primary">{t('rpg.presets.apply')}</p>
+                  </button>
+               ))}
+            </div>
+         </section>
+
+         <section
             aria-labelledby="rpg-character-heading"
             className="rounded-2xl border border-border/80 bg-card/40 p-4 md:p-5"
          >
@@ -547,6 +581,7 @@ export function CharacterSheetContainer() {
                      race={selectedRace}
                      imageAlt={previewAlt}
                      imgClassName="h-full w-full object-cover object-center"
+                     portraitUrl={selectedPreset?.portraitUrl}
                   />
                </div>
                <div className="min-w-0 flex-1 text-center sm:text-left">
