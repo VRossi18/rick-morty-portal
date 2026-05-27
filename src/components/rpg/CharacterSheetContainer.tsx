@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useCallback, useId, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { buildCharacterSheetExport } from './buildCharacterSheetExport';
 import type { CharacterSheetExportTranslate } from './buildCharacterSheetExport';
@@ -62,6 +62,11 @@ function RacePortrait({
    portraitUrl?: string;
 }) {
    const [imgFailed, setImgFailed] = useState(false);
+   const resolvedSrc = portraitUrl ?? race.portraitUrl;
+
+   useEffect(() => {
+      setImgFailed(false);
+   }, [resolvedSrc]);
 
    if (imgFailed) {
       return (
@@ -71,7 +76,7 @@ function RacePortrait({
 
    return (
       <img
-         src={portraitUrl ?? race.portraitUrl}
+         src={resolvedSrc}
          alt={imageAlt}
          className={imgClassName}
          loading="lazy"
