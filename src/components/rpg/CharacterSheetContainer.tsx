@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useCallback, useId, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { buildCharacterSheetExport } from './buildCharacterSheetExport';
 import type { CharacterSheetExportTranslate } from './buildCharacterSheetExport';
@@ -61,14 +61,10 @@ function RacePortrait({
    imgClassName: string;
    portraitUrl?: string;
 }) {
-   const [imgFailed, setImgFailed] = useState(false);
+   const [failedSrc, setFailedSrc] = useState<string | null>(null);
    const resolvedSrc = portraitUrl ?? race.portraitUrl;
 
-   useEffect(() => {
-      setImgFailed(false);
-   }, [resolvedSrc]);
-
-   if (imgFailed) {
+   if (failedSrc === resolvedSrc) {
       return (
          <div className={clsx('h-full w-full', race.cardClass)} role="img" aria-label={imageAlt} />
       );
@@ -82,7 +78,7 @@ function RacePortrait({
          loading="lazy"
          decoding="async"
          referrerPolicy="no-referrer"
-         onError={() => setImgFailed(true)}
+         onError={() => setFailedSrc(resolvedSrc)}
       />
    );
 }
