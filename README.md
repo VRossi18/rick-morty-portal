@@ -24,9 +24,9 @@ Beyond CI/CD, the project is meant to grow a **playable Rick and Morty–inspire
 
 | Job                     | When                                                   | Steps                                                                                                                                       |
 | ----------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Lint and test**       | Every push and PR to `main`                            | `pnpm install` → `pnpm lint` → `pnpm test` → `server` tests → `pnpm run rpg:write-export-sample` → upload **`rpg-character-export-sample`** |
-| **Build and audit**     | After lint and test succeed                            | `pnpm install` → `pnpm run build` (Pages: `VITE_STRIPE_CHECKOUT_API_URL` from secrets) → `pnpm audit` → (on `main` push only) upload `dist` |
-| **Deploy Cloud Run**    | After build, only on **`push` to `main`**              | Docker image (Node serves SPA + Stripe API) → GHCR → **Artifact Registry** → **Cloud Run**; smoke tests on `/health` and `/`                |
+| **Lint and test**       | Every push and PR to `main`                            | `pnpm install` → `pnpm lint` → `pnpm test` → `pnpm run rpg:write-export-sample` → upload **`rpg-character-export-sample`**                  |
+| **Build and audit**     | After lint and test succeed                            | `pnpm install` → `pnpm run build` → `pnpm audit` → (on `main` push only) upload `dist` as a Pages artifact                                  |
+| **Deploy Cloud Run**    | After build, only on **`push` to `main`**              | Docker image (nginx + static `dist`) → GHCR → **Artifact Registry** → **Cloud Run** (`rick-morty-portal`); smoke tests on `/health` and `/` |
 | **Deploy GitHub Pages** | After build, only on **`push` to `main`**              | `actions/deploy-pages` publishes the uploaded artifact                                                                                      |
 | **Tag release (patch)** | After **both** deploys succeed on **`push` to `main`** | Reads [`.github/version-prefix`](.github/version-prefix), bumps patch tag (`v1.0.1`, …), pushes to origin                                   |
 
@@ -37,9 +37,9 @@ The production build runs [`scripts/copy-404.mjs`](scripts/copy-404.mjs) after V
 | Target               | What runs                                                                     | Notes                                                                              |
 | -------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | **GitHub Pages**     | Static `dist` from the main Vite build (`base`: `/rick-and-morty-portal/`)    | Project-site URL under the repo name                                               |
-| **Google Cloud Run** | Node container ([`Dockerfile`](Dockerfile)) on port **8080**: static `dist` + `/api/stripe/*` | Build uses `VITE_BASE=/`; Stripe secrets on the service |
+| **Google Cloud Run** | Same app in a container ([`Dockerfile`](Dockerfile) + nginx on port **8080**) | Build uses `VITE_BASE=/` for root hosting; deploy via Workload Identity Federation |
 
-Cloud Run requires GitHub Actions secrets: `GCP_WORKLOAD_IDENTITY_PROVIDER`, `GCP_SERVICE_ACCOUNT`, `GCP_REGION`, `GCP_PROJECT_ID`, `GCP_REGISTRY_NAME`, plus Stripe: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `ALLOWED_ORIGINS`. For GitHub Pages PIX, also set `STRIPE_CHECKOUT_API_URL` (absolute API URL on Cloud Run). See [`docs/donations-stripe.md`](docs/donations-stripe.md).
+Cloud Run requires GitHub Actions secrets: `GCP_WORKLOAD_IDENTITY_PROVIDER`, `GCP_SERVICE_ACCOUNT`, `GCP_REGION`, `GCP_PROJECT_ID`, and `GCP_REGISTRY_NAME`. The live service URL is printed in the deploy job log (`gcloud run services describe rick-morty-portal`).
 
 ```mermaid
 flowchart LR
@@ -117,7 +117,7 @@ Front-end choices follow **[Vercel React Best Practices](https://skills.sh/verce
 - **Back** link to the home grid
 - Loading and error states on the list
 - **About me** page at **`/about`** (author bio, portrait, contact / social links)
-- **Donations modal** — navbar **Support / Apoiar** opens a dialog with an educational disclaimer (donations optional). **Crypto** tab on **Polygon** via **wagmi** + contract `donate()` payable. **PIX / Stripe** tab: presets (R$ 10 / 25 / 50) or custom amount (R$ 5–500), redirect to Stripe Checkout (PIX, BRL), return banners on success/cancel. API on Cloud Run; GitHub Pages calls the same API via CORS. See [`DonationModal`](src/components/donations/DonationModal.tsx), [`docs/donations-contract.md`](docs/donations-contract.md), [`docs/donations-stripe.md`](docs/donations-stripe.md)
+- **Donations modal** — navbar **Support / Apoiar** opens a dialog with an educational disclaimer (donations optional), **Crypto** tab on **Polygon** via **wagmi** + contract `donate()` payable, and a **PIX / Stripe** tab placeholder for future fiat flows. See [`DonationModal`](src/components/donations/DonationModal.tsx) and [`docs/donations-contract.md`](docs/donations-contract.md)
 - **Internationalization (PT / EN / ES)** — UI strings live in locale JSON (`src/locales/{pt,en,es}/common.json`); language is stored in **`localStorage`** (`portal.locale`, default `pt`); **`document.documentElement.lang`** stays in sync; **navbar flag switcher** (Brazil, US, Spain) ([`LanguageSwitcher`](src/components/layout/LanguageSwitcher.tsx))
 - Light / dark theme toggle
 - Responsive layout
@@ -135,15 +135,25 @@ Front-end choices follow **[Vercel React Best Practices](https://skills.sh/verce
 
 3. **AI-generated curiosities on detail pages** — add a **“Curiosidade” / “Fun fact”** block on character and episode detail, powered by an LLM but **not** called from the browser with a secret key. Full BFF contract, prompts, cache, and frontend integration notes: [`docs/spec.md`](docs/spec.md)
 
-4. **Donations (Stripe — cards)** — international card payments in the fiat tab (PIX is live via Checkout; see [`docs/donations-stripe.md`](docs/donations-stripe.md))
+4. **Donations (Stripe / PIX)** — wire the existing modal fiat tab to **Stripe** (PIX first, international cards later): Checkout or Payment Element, preset amounts, backend/session endpoint, webhooks (secrets never in the SPA bundle)
 
 5. **Donations (crypto enhancements)** — WalletConnect, optional on-chain donation history, and contract deploy automation beyond the current Polygon + injected-wallet flow
 
 ### Donations (local dev)
 
-**Crypto:** install deps (`wagmi`, `viem`, `@tanstack/react-query`), deploy the contract from [`docs/donations-contract.md`](docs/donations-contract.md), set `VITE_DONATION_CONTRACT_ADDRESS` in `.env`, run `pnpm dev`, connect MetaMask on Polygon.
+Install deps (already in `package.json`): `wagmi`, `viem`, `@tanstack/react-query`.
 
-**PIX:** follow [`docs/donations-stripe.md`](docs/donations-stripe.md) — run `server` with `STRIPE_SECRET_KEY` and `ALLOWED_ORIGINS=http://localhost:5173`, then `VITE_STRIPE_CHECKOUT_API_URL=http://localhost:8080/api/stripe/create-checkout-session pnpm dev`.
+1. Deploy the reference contract from [`docs/donations-contract.md`](docs/donations-contract.md) to Polygon (chain id `137`).
+2. Copy [`.env.example`](.env.example) to `.env` and set:
+
+```env
+VITE_DONATION_CONTRACT_ADDRESS=0xYourDeployedAddress
+# optional
+VITE_POLYGON_RPC_URL=
+VITE_WALLETCONNECT_PROJECT_ID=
+```
+
+3. Run `pnpm dev`, click **Apoiar / Support** in the navbar, connect MetaMask on Polygon, and send a test donation.
 
 ---
 

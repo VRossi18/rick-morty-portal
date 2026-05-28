@@ -7,14 +7,6 @@ vi.mock('../../components/donations/CryptoDonationPanel', () => ({
    CryptoDonationPanel: () => <div data-testid="crypto-panel">crypto</div>,
 }));
 
-vi.mock('../../config/donations', async (importOriginal) => {
-   const actual = await importOriginal<typeof import('../../config/donations')>();
-   return {
-      ...actual,
-      isStripePixConfigured: true,
-   };
-});
-
 describe('DonationModal', () => {
    it('renders disclaimer and tabs when open', async () => {
       render(<DonationModal open onClose={() => {}} />);
@@ -28,13 +20,13 @@ describe('DonationModal', () => {
       });
    });
 
-   it('shows fiat PIX panel when fiat tab is selected', () => {
+   it('shows fiat placeholder when fiat tab is selected', () => {
       render(<DonationModal open onClose={() => {}} />);
 
       fireEvent.click(screen.getByRole('tab', { name: i18n.t('donations.tabFiat') }));
 
-      expect(screen.getByText(i18n.t('donations.fiat.amountLabel'))).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: i18n.t('donations.fiat.pixButton') })).toBeEnabled();
+      expect(screen.getByText(i18n.t('donations.fiat.comingSoon'))).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: i18n.t('donations.fiat.pixButton') })).toBeDisabled();
    });
 
    it('calls onClose when close button is clicked', () => {

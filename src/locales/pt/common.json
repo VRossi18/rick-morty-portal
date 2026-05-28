@@ -209,17 +209,10 @@
          "errorGeneric": "Não foi possível concluir a transação. Tente novamente."
       },
       "fiat": {
-         "network": "Pagamento: PIX via Stripe (BRL)",
-         "amountLabel": "Valor em reais (BRL)",
-         "customPlaceholder": "Outro valor (ex. 15)",
-         "pixButton": "Doar com PIX",
-         "pending": "Redirecionando para o Stripe...",
-         "success": "Obrigado! Seu pagamento PIX foi recebido.",
-         "cancelled": "Pagamento cancelado. Você pode tentar novamente quando quiser.",
-         "notConfigured": "PIX via Stripe não está configurado. Defina VITE_STRIPE_CHECKOUT_API_URL no ambiente.",
-         "invalidAmount": "Informe um valor entre R$ 5 e R$ 500 (ou use um dos presets).",
-         "errorGeneric": "Não foi possível iniciar o pagamento PIX. Tente novamente.",
-         "iofNote": "Pagamentos PIX podem incluir IOF (~3,5%) exibido pelo banco no app de pagamento, conforme regras da Stripe no Brasil."
+         "comingSoon": "Em breve",
+         "pixNote": "Doações via PIX com Stripe serão habilitadas em uma próxima versão.",
+         "stripeNote": "Pagamentos internacionais com cartão também estão planejados.",
+         "pixButton": "Doar com PIX (em breve)"
       }
    },
    "about": {

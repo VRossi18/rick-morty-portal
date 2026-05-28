@@ -14,10 +14,7 @@
       "preview": "vite preview",
       "test": "vitest run",
       "test:watch": "vitest",
-      "rpg:write-export-sample": "tsx scripts/write-rpg-character-export-sample.ts",
-      "server:dev": "pnpm --dir server dev",
-      "server:build": "pnpm --dir server build",
-      "server:test": "pnpm --dir server test"
+      "rpg:write-export-sample": "tsx scripts/write-rpg-character-export-sample.ts"
    },
    "pnpm": {
       "overrides": {
