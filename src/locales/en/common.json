@@ -209,10 +209,17 @@
          "errorGeneric": "Could not complete the transaction. Please try again."
       },
       "fiat": {
-         "comingSoon": "Coming soon",
-         "pixNote": "PIX donations via Stripe will be enabled in a future release.",
-         "stripeNote": "International card payments are also planned.",
-         "pixButton": "Donate with PIX (coming soon)"
+         "network": "Payment: PIX via Stripe (BRL)",
+         "amountLabel": "Amount in Brazilian reais (BRL)",
+         "customPlaceholder": "Custom amount (e.g. 15)",
+         "pixButton": "Donate with PIX",
+         "pending": "Redirecting to Stripe...",
+         "success": "Thank you! Your PIX payment was received.",
+         "cancelled": "Payment cancelled. You can try again anytime.",
+         "notConfigured": "PIX via Stripe is not configured. Set VITE_STRIPE_CHECKOUT_API_URL in the environment.",
+         "invalidAmount": "Enter an amount between R$ 5 and R$ 500 (or use a preset).",
+         "errorGeneric": "Could not start the PIX payment. Please try again.",
+         "iofNote": "PIX payments may include IOF (~3.5%) shown by your bank in the payment app, per Stripe rules in Brazil."
       }
    },
    "about": {

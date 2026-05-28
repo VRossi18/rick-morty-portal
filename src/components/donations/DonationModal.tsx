@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { Suspense, lazy, useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { usePixDonationReturnBanner } from '../../hooks/usePixDonationReturnBanner';
 import { DonationDisclaimer } from './DonationDisclaimer';
 import { FiatDonationPanel } from './FiatDonationPanel';
 
@@ -33,6 +34,7 @@ export function DonationModal({ open, onClose }: DonationModalProps) {
    const dialogRef = useRef<HTMLDialogElement>(null);
    const titleId = useId();
    const [tab, setTab] = useState<DonationTab>('crypto');
+   const pixReturnBanner = usePixDonationReturnBanner(open);
 
    useEffect(() => {
       const dialog = dialogRef.current;
@@ -120,7 +122,7 @@ export function DonationModal({ open, onClose }: DonationModalProps) {
                      <LazyCryptoDonationPanel />
                   </Suspense>
                ) : (
-                  <FiatDonationPanel />
+                  <FiatDonationPanel returnBanner={pixReturnBanner} />
                )}
             </div>
          </div>

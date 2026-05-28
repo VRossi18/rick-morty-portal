@@ -43,6 +43,7 @@ jobs:
               pnpm install
               pnpm lint
               pnpm test
+              cd server && pnpm install && pnpm test
          - name: Write RPG character export sample (CI fixture)
            run: pnpm run rpg:write-export-sample
          - name: Upload RPG character export sample
@@ -67,6 +68,8 @@ jobs:
            with:
               version: ${{ env.PACKAGE_MANAGER_VERSION }}
          - name: Build and audit
+           env:
+              VITE_STRIPE_CHECKOUT_API_URL: ${{ secrets.STRIPE_CHECKOUT_API_URL }}
            run: |
               pnpm install
               pnpm run build
@@ -96,13 +99,6 @@ jobs:
            with:
               version: ${{ env.PACKAGE_MANAGER_VERSION }}
 
-         - name: Build static app for Cloud Run (root base path)
-           run: |
-              pnpm install
-              NODE_ENV=production VITE_BASE=/ pnpm exec tsc -b
-              NODE_ENV=production VITE_BASE=/ pnpm exec vite build
-              node ./scripts/copy-404.mjs
-
          - name: Set image names
            run: |
               REPO_LC=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
@@ -121,6 +117,9 @@ jobs:
            with:
               context: .
               push: true
+              build-args: |
+                 VITE_BASE=/
+                 VITE_STRIPE_CHECKOUT_API_URL=/api/stripe/create-checkout-session
               tags: |
                  ${{ env.IMAGE_GHCR }}:${{ github.sha }}
                  ${{ env.IMAGE_GHCR }}:latest
@@ -152,6 +151,10 @@ jobs:
               region: ${{ secrets.GCP_REGION }}
               image: ${{ env.IMAGE_GCP }}:${{ github.sha }}
               flags: '--allow-unauthenticated --port=8080'
+              env_vars: |
+                 STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}
+                 STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }}
+                 ALLOWED_ORIGINS=${{ secrets.ALLOWED_ORIGINS }}
 
          - name: Test the live application
            env:
