@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { EpisodeDetailLink } from '../components/shared/EpisodeDetailLink';
+import { CharacterCuriosityPanel } from '../components/characters/CharacterCuriosityPanel';
 import { CharacterService } from '../services/characters';
 import type { Character, Episode, ResourceBase } from '../types/api';
 import type { CharacterLocationState } from '../types/navigation';
@@ -160,13 +161,19 @@ export function CharacterDetailPage() {
                   </p>
                ) : character ? (
                   <div className="flex flex-col gap-10 md:flex-row md:items-start">
-                     <div className="mx-auto w-full max-w-sm shrink-0 overflow-hidden rounded-2xl border border-primary/25 bg-card shadow-lg shadow-primary/10 md:mx-0">
+                     <div className="mx-auto w-full max-w-sm shrink-0 space-y-4 md:mx-0">
+                     <div className="overflow-hidden rounded-2xl border border-primary/25 bg-card shadow-lg shadow-primary/10">
                         <img
                            src={character.image}
                            alt={character.name}
                            className="aspect-square w-full object-cover"
                         />
                      </div>
+                     <CharacterCuriosityPanel
+                        key={`${character.id}-${i18n.language}`}
+                        characterId={character.id}
+                     />
+                  </div>
 
                      <div className="min-w-0 flex-1 space-y-6">
                         <div>

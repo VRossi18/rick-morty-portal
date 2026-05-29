@@ -3,26 +3,29 @@
    "private": true,
    "version": "0.0.0",
    "type": "module",
+   "packageManager": "pnpm@10.15.0",
    "engines": {
       "node": ">=24",
       "pnpm": ">=10.0.0 <11.0.0"
    },
    "scripts": {
       "dev": "vite",
+      "predev:all": "pnpm --dir server install",
+      "dev:all": "concurrently -n server,web -c blue,green \"pnpm run server:dev\" \"pnpm dev\"",
+      "server:dev": "pnpm --dir server install && pnpm --dir server dev",
       "build": "tsc -b && vite build && node ./scripts/copy-404.mjs",
       "lint": "eslint .",
       "preview": "vite preview",
       "test": "vitest run",
       "test:watch": "vitest",
-      "rpg:write-export-sample": "tsx scripts/write-rpg-character-export-sample.ts"
+      "rpg:write-export-sample": "tsx scripts/write-rpg-character-export-sample.ts",
+      "server:build": "pnpm --dir server build",
+      "server:test": "pnpm --dir server test"
    },
    "pnpm": {
       "overrides": {
          "ws": ">=8.20.1"
-      },
-      "onlyBuiltDependencies": [
-         "esbuild"
-      ]
+      }
    },
    "dependencies": {
       "@tailwindcss/postcss": "^4.2.4",
@@ -51,6 +54,7 @@
       "@types/react-dom": "^19.2.3",
       "@vitejs/plugin-react": "^6.0.1",
       "autoprefixer": "^10.5.0",
+      "concurrently": "^9.2.1",
       "eslint": "^10.2.1",
       "eslint-plugin-react-hooks": "^7.1.1",
       "eslint-plugin-react-refresh": "^0.5.2",

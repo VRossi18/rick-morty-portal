@@ -10,4 +10,12 @@ const productionBase = process.env.VITE_BASE ?? GITHUB_PAGES_BASE;
 export default defineConfig({
    base: process.env.NODE_ENV === 'production' ? productionBase : '/',
    plugins: [react(), tailwindcss()],
+   server: {
+      proxy: {
+         '/api': {
+            target: 'http://localhost:8080',
+            changeOrigin: true,
+         },
+      },
+   },
 });

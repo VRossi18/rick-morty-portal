@@ -172,7 +172,17 @@
       "episodesLoading": "Cargando episodios...",
       "episodesEmpty": "No hay episodios listados para este personaje.",
       "episodeCount_one": "({{count}} episodio)",
-      "episodeCount_other": "({{count}} episodios)"
+      "episodeCount_other": "({{count}} episodios)",
+      "curiosity": {
+         "title": "Curiosidad",
+         "loading": "Generando curiosidad...",
+         "error": "No se pudo cargar la curiosidad ahora.",
+         "retry": "Intentar de nuevo",
+         "askPlaceholder": "Haz una pregunta sobre este personaje...",
+         "askButton": "Preguntar",
+         "emptyQuestion": "Escribe una pregunta antes de enviar.",
+         "notConfigured": "Las curiosidades con IA no están configuradas. Define VITE_AI_API_URL en el entorno."
+      }
    },
    "card": {
       "ariaViewDetails": "Ver detalles de {{name}}",

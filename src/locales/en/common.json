@@ -172,7 +172,17 @@
       "episodesLoading": "Loading episodes...",
       "episodesEmpty": "No episodes listed for this character.",
       "episodeCount_one": "({{count}} episode)",
-      "episodeCount_other": "({{count}} episodes)"
+      "episodeCount_other": "({{count}} episodes)",
+      "curiosity": {
+         "title": "Fun fact",
+         "loading": "Generating fun fact...",
+         "error": "Could not load the fun fact right now.",
+         "retry": "Try again",
+         "askPlaceholder": "Ask a question about this character...",
+         "askButton": "Ask",
+         "emptyQuestion": "Type a question before sending.",
+         "notConfigured": "AI curiosities are not configured. Set VITE_AI_API_URL in the environment."
+      }
    },
    "card": {
       "ariaViewDetails": "View details for {{name}}",

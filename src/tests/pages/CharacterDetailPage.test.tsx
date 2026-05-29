@@ -20,6 +20,12 @@ vi.mock('../../services/episodes', () => ({
    },
 }));
 
+vi.mock('../../components/characters/CharacterCuriosityPanel', () => ({
+   CharacterCuriosityPanel: ({ characterId }: { characterId: number }) => (
+      <div data-testid="character-curiosity-panel">curiosity-{characterId}</div>
+   ),
+}));
+
 const mockEpisode: Episode = {
    id: 1,
    name: 'Pilot',
@@ -75,6 +81,7 @@ describe('CharacterDetailPage', () => {
       renderAt('/character/2');
 
       expect(await screen.findByRole('heading', { name: 'Morty Smith' })).toBeInTheDocument();
+      expect(screen.getByTestId('character-curiosity-panel')).toHaveTextContent('curiosity-2');
       expect(screen.getByRole('link', { name: /Pilot/i })).toHaveAttribute('href', '/episode/1');
       expect(EpisodeService.getMultipleEpisodes).toHaveBeenCalledWith([1]);
       const earthLinks = screen.getAllByRole('link', { name: 'Earth' });

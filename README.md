@@ -24,9 +24,9 @@ Beyond CI/CD, the project is meant to grow a **playable Rick and Morty–inspire
 
 | Job                     | When                                                   | Steps                                                                                                                                       |
 | ----------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Lint and test**       | Every push and PR to `main`                            | `pnpm install` → `pnpm lint` → `pnpm test` → `pnpm run rpg:write-export-sample` → upload **`rpg-character-export-sample`**                  |
-| **Build and audit**     | After lint and test succeed                            | `pnpm install` → `pnpm run build` → `pnpm audit` → (on `main` push only) upload `dist` as a Pages artifact                                  |
-| **Deploy Cloud Run**    | After build, only on **`push` to `main`**              | Docker image (nginx + static `dist`) → GHCR → **Artifact Registry** → **Cloud Run** (`rick-morty-portal`); smoke tests on `/health` and `/` |
+| **Lint and test**       | Every push and PR to `main`                            | `pnpm install` → `pnpm lint` → `pnpm test` → `server` tests → `pnpm run rpg:write-export-sample` → upload artifact |
+| **Build and audit**     | After lint and test succeed                            | `pnpm install` → `pnpm run build` (Pages: `VITE_AI_API_URL` from secrets) → `pnpm audit` → upload `dist` |
+| **Deploy Cloud Run**    | After build, only on **`push` to `main`**              | Docker image (Node serves SPA + AI API) → GHCR → Artifact Registry → Cloud Run; smoke tests on `/health` and `/` |
 | **Deploy GitHub Pages** | After build, only on **`push` to `main`**              | `actions/deploy-pages` publishes the uploaded artifact                                                                                      |
 | **Tag release (patch)** | After **both** deploys succeed on **`push` to `main`** | Reads [`.github/version-prefix`](.github/version-prefix), bumps patch tag (`v1.0.1`, …), pushes to origin                                   |
 
@@ -37,9 +37,9 @@ The production build runs [`scripts/copy-404.mjs`](scripts/copy-404.mjs) after V
 | Target               | What runs                                                                     | Notes                                                                              |
 | -------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | **GitHub Pages**     | Static `dist` from the main Vite build (`base`: `/rick-and-morty-portal/`)    | Project-site URL under the repo name                                               |
-| **Google Cloud Run** | Same app in a container ([`Dockerfile`](Dockerfile) + nginx on port **8080**) | Build uses `VITE_BASE=/` for root hosting; deploy via Workload Identity Federation |
+| **Google Cloud Run** | Node container ([`Dockerfile`](Dockerfile)) on port **8080**: static `dist` + `/api/ai/*` | Build uses `VITE_BASE=/`; Groq (`LLM_*`) secrets on the service |
 
-Cloud Run requires GitHub Actions secrets: `GCP_WORKLOAD_IDENTITY_PROVIDER`, `GCP_SERVICE_ACCOUNT`, `GCP_REGION`, `GCP_PROJECT_ID`, and `GCP_REGISTRY_NAME`. The live service URL is printed in the deploy job log (`gcloud run services describe rick-morty-portal`).
+Cloud Run requires GitHub Actions secrets: `GCP_*` (see table above), plus `LLM_API_KEY`, `ALLOWED_ORIGINS`, and for GitHub Pages `AI_API_URL`. See [`docs/spec.md`](docs/spec.md).
 
 ```mermaid
 flowchart LR
@@ -114,7 +114,7 @@ Front-end choices follow **[Vercel React Best Practices](https://skills.sh/verce
 - **Character detail** page: full fields from the API (status, species, type, gender, origin, location, episode count, created), loading and error handling (including 404); **origin** and **current location** link to **`/location/:id`** when the API provides a location URL
 - **Episodes** at **`/episodes`** — **season filter** (1–5) with **pagination scoped to the selected season** (API `episode=Sxx` when browsing by season; character multiselect still uses a client-side pass over the catalog). **Responsive grid** (episodes flow left-to-right by episode code, same palette, glow cards, Framer Motion transitions as the character grid), search by episode name, and **multi-select character filter** (AND logic — episode must include every selected character). **`/episode/:id`** shows air date, code, created timestamp, and linked characters with thumbnails.
 - **Locations** at **`/locations`** — paginated grid with **filters** by name (debounced), **type**, and **dimension** (API-backed selects). **`/location/:id`** shows type, dimension, resident count, **residents** linked to **`/character/:id`**, and **related episodes** derived from resident appearances (the API has no direct location→episode link; the UI explains this). Same glow cards and portal-style navigation as episodes.
-- **Back** link to the home grid
+- **Character detail** at **`/character/:id`** — portrait, metadata, episode links, and an **AI curiosity card** below the image (OpenAI via BFF, initial fun fact + follow-up questions). See [`CharacterCuriosityPanel`](src/components/characters/CharacterCuriosityPanel.tsx) and [`docs/spec.md`](docs/spec.md)
 - Loading and error states on the list
 - **About me** page at **`/about`** (author bio, portrait, contact / social links)
 - **Donations modal** — navbar **Support / Apoiar** opens a dialog with an educational disclaimer (donations optional), **Crypto** tab on **Polygon** via **wagmi** + contract `donate()` payable, and a **PIX / Stripe** tab placeholder for future fiat flows. See [`DonationModal`](src/components/donations/DonationModal.tsx) and [`docs/donations-contract.md`](docs/donations-contract.md)
@@ -133,7 +133,7 @@ Front-end choices follow **[Vercel React Best Practices](https://skills.sh/verce
 
 2. **Detail page polish (characters & episodes)** — deepen **`/character/:id`** and **`/episode/:id`** beyond the current API fields: cross-links (e.g. from a character to episodes they appear in, from an episode back to filtered lists), optional portal-style transitions on episode detail similar to characters, and small UX tweaks (skeletons, retry, shared layout blocks) so both detail screens feel like one product surface
 
-3. **AI-generated curiosities on detail pages** — add a **“Curiosidade” / “Fun fact”** block on character and episode detail, powered by an LLM but **not** called from the browser with a secret key. Full BFF contract, prompts, cache, and frontend integration notes: [`docs/spec.md`](docs/spec.md)
+3. **AI curiosities (episodes)** — extend the BFF pattern from character detail to **`/episode/:id`** (character curiosities are live; see [`docs/spec.md`](docs/spec.md))
 
 4. **Donations (Stripe / PIX)** — wire the existing modal fiat tab to **Stripe** (PIX first, international cards later): Checkout or Payment Element, preset amounts, backend/session endpoint, webhooks (secrets never in the SPA bundle)
 
@@ -154,6 +154,8 @@ VITE_WALLETCONNECT_PROJECT_ID=
 ```
 
 3. Run `pnpm dev`, click **Apoiar / Support** in the navbar, connect MetaMask on Polygon, and send a test donation.
+
+**AI curiosities:** copy [`.env.example`](.env.example) to `.env`, set `LLM_API_KEY` (Groq) and `VITE_AI_API_URL=/api/ai/character-curiosity`, then run `pnpm run dev:all`. See [`docs/spec.md`](docs/spec.md).
 
 ---
 

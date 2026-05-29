@@ -1,0 +1,24 @@
+{
+   "name": "rick-morty-portal-server",
+   "private": true,
+   "type": "module",
+   "packageManager": "pnpm@10.15.0",
+   "scripts": {
+      "dev": "tsx watch src/index.ts",
+      "build": "tsc -p tsconfig.json",
+      "start": "node dist/index.js",
+      "test": "vitest run"
+   },
+   "dependencies": {
+      "@hono/node-server": "^1.19.9",
+      "hono": "^4.11.4",
+      "openai": "^6.16.0",
+      "zod": "^4.3.6"
+   },
+   "devDependencies": {
+      "@types/node": "^24.12.2",
+      "tsx": "^4.21.0",
+      "typescript": "~6.0.2",
+      "vitest": "^3.2.4"
+   }
+}
